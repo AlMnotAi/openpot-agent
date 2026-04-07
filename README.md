@@ -79,3 +79,4 @@ MIT
 ---
 
 Built by [Al Menard](https://openpot.app). OpenPot is a native iOS app for self-hosted AI agents.
+# open-pot-agent
