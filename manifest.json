@@ -1,7 +1,7 @@
 {
-  "manifest_version": 1,
-  "openpot_version": "0.9.0",
-  "updated_at": "2026-04-07T12:00:00Z",
+  "manifest_version": 2,
+  "openpot_version": "0.9.1",
+  "updated_at": "2026-04-07T19:00:00Z",
   "features": [
     {
       "id": "chat",
@@ -33,6 +33,23 @@
       },
       "insert_file": "inserts/pulse-cards-v1.md",
       "status_key": "pulse_cards"
+    },
+    {
+      "id": "pulse-expansion",
+      "name": "Pulse Card Expansion",
+      "version": 1,
+      "required": false,
+      "description": "Tap-to-expand cards with full markdown reports. Report cards carry an expanded_body field and optional action buttons. The app renders a detail sheet with the complete content.",
+      "prerequisites": {
+        "gateway": true,
+        "http_server": true,
+        "endpoints": [
+          "POST /api/cards"
+        ],
+        "depends_on": ["pulse-cards"]
+      },
+      "insert_file": "inserts/pulse-expansion-v1.md",
+      "status_key": "pulse_expansion"
     },
     {
       "id": "apps",
