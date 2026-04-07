@@ -99,7 +99,21 @@ Then:
 
 > "OpenPot sync"
 
-Your agent installs the skill, checks what features it can support, and configures itself. It'll report back what's available and what's missing.
+Your agent installs the skill, checks what features it can support, and configures itself. It writes an `openpot-status.json` file that OpenPot reads on connect to know what features to show.
+
+---
+
+## How OpenPot Reads Your Agent's Capabilities
+
+When OpenPot connects to your agent, it reads the agent's feature status from:
+
+```
+GET http://<your-server>:8000/api/openpot/status
+```
+
+This endpoint serves the `openpot-status.json` file that the awareness skill creates. It tells OpenPot which features your agent supports — Pulse cards, web apps, skills, terminal, and any future features.
+
+If your agent doesn't have the awareness skill installed yet, or doesn't have an HTTP server on port 8000, OpenPot defaults to showing all tabs. Nothing breaks — the status check is optional.
 
 ---
 

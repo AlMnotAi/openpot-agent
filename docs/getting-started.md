@@ -14,13 +14,13 @@ These are things you can say to your agent — in OpenPot chat, Telegram, Slack,
 
 > "OpenPot sync"
 
-Your agent installs the skill, checks what it can support, and tells you what's available.
+Your agent installs the skill, checks what it can support, and tells you what's available. When new features are added to OpenPot, just say "OpenPot sync" again and your agent picks them up.
 
 ---
 
 ## Explore the Pulse Tab
 
-The Pulse tab shows cards your agent sends you — proactive updates, reminders, reports, alerts. It's empty until your agent starts posting cards. Here's how to get it going:
+The Pulse tab shows cards your agent sends you — proactive updates, reminders, reports, alerts. It's empty until your agent starts posting cards.
 
 **See what it looks like:**
 
@@ -44,13 +44,21 @@ The Pulse tab shows cards your agent sends you — proactive updates, reminders,
 
 > "Watch my email. If something looks urgent, send me a card about it"
 
+### Tap to Expand
+
+Report-type cards (system health, DCA signals, morning briefs) are tappable. Look for the small chevron on the card — tap it to open a full detail sheet with the complete report. The card face is the summary, the detail sheet is the full story.
+
+If your cards don't expand, tell your agent:
+
+> "OpenPot sync"
+
+The sync will install the expansion feature directives so your agent starts including full reports in its cards.
+
 ---
 
 ## Try the Apps Tab
 
 Your agent can build small web apps that live in the Apps tab. These are tools, dashboards, and reference pages — built on demand.
-
-**Ask your agent to build something useful:**
 
 > "Build me a unit converter app — weight, distance, and temperature"
 
@@ -112,9 +120,23 @@ If you're technical, the Terminal tab gives you a direct SSH connection to your 
 
 ---
 
+## Agent Themes
+
+Each agent can have its own color theme so you can tell at a glance which agent you're talking to. Go to the Agents tab, tap your agent, and pick a theme from the color swatches. The theme tints the chat bubbles, sidebar, and dock indicator.
+
+---
+
+## Multiple Agents
+
+OpenPot supports multiple agents. Each agent gets its own dock icon on the left side of the screen. Tap an agent to switch — the entire app context changes to that agent's chat, cards, apps, and skills.
+
+To add a second agent, go to the Agents tab and tap the + button. You'll need the gateway address and token for the new agent (see the connection guide).
+
+---
+
 ## Make It Yours
 
-The whole point of a personal agent is that it adapts to you. Tell your agent what you care about and it'll start sending you the right cards, building the right tools, and keeping track of the right things.
+Tell your agent what you care about and it'll start sending you the right cards, building the right tools, and keeping track of the right things.
 
 > "I care about fitness, cooking, and my investment portfolio. Keep those in mind when you send me cards."
 
