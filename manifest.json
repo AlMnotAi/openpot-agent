@@ -1,0 +1,79 @@
+{
+  "manifest_version": 1,
+  "openpot_version": "0.9.0",
+  "updated_at": "2026-04-07T12:00:00Z",
+  "features": [
+    {
+      "id": "chat",
+      "name": "Chat",
+      "version": 1,
+      "required": true,
+      "description": "Real-time chat via WebSocket gateway protocol with streaming responses",
+      "prerequisites": {
+        "gateway": true
+      },
+      "insert_file": null,
+      "status_key": "chat"
+    },
+    {
+      "id": "pulse-cards",
+      "name": "Pulse Cards",
+      "version": 1,
+      "required": false,
+      "description": "Proactive notification cards grouped by category with swipe-to-dismiss, card stacks, and agent badges",
+      "prerequisites": {
+        "gateway": true,
+        "http_server": true,
+        "endpoints": [
+          "GET /api/cards",
+          "POST /api/cards",
+          "PATCH /api/cards/{id}/read",
+          "PATCH /api/cards/{id}/dismiss"
+        ]
+      },
+      "insert_file": "inserts/pulse-cards-v1.md",
+      "status_key": "pulse_cards"
+    },
+    {
+      "id": "apps",
+      "name": "Web Apps",
+      "version": 1,
+      "required": false,
+      "description": "Agent-generated standalone HTML apps served in WKWebView, listed with pull-to-refresh and frequency sorting",
+      "prerequisites": {
+        "gateway": true,
+        "http_server": true,
+        "endpoints": [
+          "GET /api/apps",
+          "GET /api/apps/{filename}"
+        ]
+      },
+      "insert_file": "inserts/apps-v1.md",
+      "status_key": "apps"
+    },
+    {
+      "id": "skills",
+      "name": "Skills Display",
+      "version": 1,
+      "required": false,
+      "description": "View and manage agent skills from OpenPot. Reads skill list via gateway WebSocket, displays installed and bundled skills with status and requirements.",
+      "prerequisites": {
+        "gateway": true
+      },
+      "insert_file": null,
+      "status_key": "skills"
+    },
+    {
+      "id": "terminal",
+      "name": "SSH Terminal",
+      "version": 1,
+      "required": false,
+      "description": "In-app SSH terminal via SwiftTerm with ed25519 keypair authentication",
+      "prerequisites": {
+        "gateway": true
+      },
+      "insert_file": null,
+      "status_key": "terminal"
+    }
+  ]
+}

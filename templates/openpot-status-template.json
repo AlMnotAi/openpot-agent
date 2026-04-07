@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "agent_id": "REPLACE_WITH_YOUR_AGENT_ID",
+  "last_sync": null,
+  "manifest_version_seen": null,
+  "infrastructure": {
+    "gateway": true,
+    "http_server": false,
+    "http_server_port": null
+  },
+  "features": {}
+}
