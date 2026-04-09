@@ -56,6 +56,31 @@ The sync will install the expansion feature directives so your agent starts incl
 
 ---
 
+## Explore the Calendar Tab
+
+The Calendar tab shows events your agent tracks — meetings, deadlines, cron job schedules, reminders, and anything else time-bound. Your agent is the source of truth; the calendar displays what it knows.
+
+**Populate your calendar:**
+
+> "Add my usual Monday portfolio review to my OpenPot calendar — every Monday at 4:30 PM"
+
+> "Track my upcoming appointments in the OpenPot calendar"
+
+> "Add a reminder for my oil change — it's due April 20"
+
+**Switch between views:**
+
+The Calendar tab has two views you can toggle between:
+
+- **Month** — grid view with dot indicators on days that have events
+- **Agenda** — chronological list from today through the end of next month, grouped by day with sticky date headers
+
+If your Calendar tab is empty, your agent needs the calendar API endpoint set up. Tell your agent:
+
+> "OpenPot sync"
+
+---
+
 ## Try the Apps Tab
 
 Your agent can build small web apps that live in the Apps tab. These are tools, dashboards, and reference pages — built on demand.
@@ -102,9 +127,9 @@ OpenPot's chat works like any conversation with your agent, but it's on your pho
 
 ---
 
-## Skills Tab
+## Skills
 
-The Skills tab shows what capabilities your agent has — web search, email, calendar access, file tools, and more. You don't need to configure anything here, but it's useful to see what's available.
+The Agents tab → tap your agent → Skills shows what capabilities your agent has — web search, email, calendar access, file tools, and more. You don't need to configure anything here, but it's useful to see what's available.
 
 > "What skills do you have?"
 
@@ -120,6 +145,12 @@ If you're technical, the Terminal tab gives you a direct SSH connection to your 
 
 ---
 
+## Settings
+
+Tap the **gear icon** at the bottom of the agent dock (the left sidebar) to open Settings. This is where you manage gateway connections, connection routes, and app appearance.
+
+---
+
 ## Agent Themes
 
 Each agent can have its own color theme so you can tell at a glance which agent you're talking to. Go to the Agents tab, tap your agent, and pick a theme from the color swatches. The theme tints the chat bubbles, sidebar, and dock indicator.
@@ -128,7 +159,7 @@ Each agent can have its own color theme so you can tell at a glance which agent 
 
 ## Multiple Agents
 
-OpenPot supports multiple agents. Each agent gets its own dock icon on the left side of the screen. Tap an agent to switch — the entire app context changes to that agent's chat, cards, apps, and skills.
+OpenPot supports multiple agents. Each agent gets its own dock icon on the left side of the screen. Tap an agent to switch — the entire app context changes to that agent's chat, cards, apps, and calendar.
 
 To add a second agent, go to the Agents tab and tap the + button. You'll need the gateway address and token for the new agent (see the connection guide).
 

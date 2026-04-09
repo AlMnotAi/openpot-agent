@@ -111,9 +111,27 @@ When OpenPot connects to your agent, it reads the agent's feature status from:
 GET http://<your-server>:8000/api/openpot/status
 ```
 
-This endpoint serves the `openpot-status.json` file that the awareness skill creates. It tells OpenPot which features your agent supports — Pulse cards, web apps, skills, terminal, and any future features.
+This endpoint serves the `openpot-status.json` file that the awareness skill creates. It tells OpenPot which features your agent supports — Pulse cards, web apps, calendar, terminal, and any future features.
 
 If your agent doesn't have the awareness skill installed yet, or doesn't have an HTTP server on port 8000, OpenPot defaults to showing all tabs. Nothing breaks — the status check is optional.
+
+---
+
+## What Each Feature Requires
+
+| Feature | Requires | What You Get |
+|---------|----------|--------------|
+| Chat | Gateway only | Real-time chat, streaming responses, message history |
+| Pulse Cards | Gateway + HTTP server + card endpoints | Proactive notification cards |
+| Pulse Expansion | Pulse Cards | Tap-to-expand report cards with full markdown |
+| Calendar | Gateway + HTTP server + `/api/calendar/events` | Month and Agenda views of agent-managed events |
+| Web Apps | Gateway + HTTP server + app endpoints | In-app browser for agent-built HTML tools |
+| Skills | Gateway only | View installed and available skills (in Agents tab) |
+| Terminal | Gateway only | SSH connection to your server |
+
+The Calendar tab requires your HTTP server to implement `GET /api/calendar/events`. If the endpoint isn't available, the Calendar tab shows empty. Tell your agent to set it up:
+
+> "Set up the calendar API endpoint so OpenPot can display my calendar"
 
 ---
 
@@ -136,7 +154,11 @@ If your agent doesn't have the awareness skill installed yet, or doesn't have an
 **Connected but Pulse tab is empty:**
 - Your agent needs the OpenPot Awareness Skill installed (see above)
 - Your agent needs an HTTP server on port 8000 with card endpoints for Pulse cards
-- If you only have the gateway, Chat will work but Pulse and Apps need additional backend setup
+- If you only have the gateway, Chat will work but Pulse, Apps, and Calendar need additional backend setup
+
+**Calendar tab is empty:**
+- Your agent needs `GET /api/calendar/events` implemented on its HTTP server
+- Tell your agent: "OpenPot sync" — it will check what's needed and set it up
 
 **Agent name shows as blank:**
 - Your agent needs IDENTITY.md configured in its workspace with a name and emoji

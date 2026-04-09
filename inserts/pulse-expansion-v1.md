@@ -37,6 +37,7 @@ multi-item analysis, add these optional fields:
 - DCA signal reports — full signal table with tickers, prices, signals, conviction, reasoning
 - Morning briefs — complete briefing: calendar, weather, tasks, news
 - System health reports — all service statuses, uptime, memory, disk, errors
+- Weekly calendar summaries — list of upcoming events across the week
 - Any card summarizing a multi-item analysis
 
 **Do NOT include expanded_body on simple notifications:**
@@ -54,6 +55,17 @@ The content is rendered as markdown in a native detail sheet. Use:
 
 The `body` field stays as the 1-2 line summary shown on the card face.
 The `expanded_body` is the full story behind the door.
+
+### Calendar Cards and Expansion
+
+Use the `calendar` category with `expanded_body` for multi-day summaries
+or weekly agenda overviews posted as Pulse cards. These complement the
+Calendar tab — the card is the "heads up" and the Calendar tab is the
+persistent view.
+
+**Example:** A Monday morning card with `category: "calendar"` and
+`expanded_body` containing the full week's event list gives the user a
+quick overview without them needing to open the Calendar tab.
 
 ### Action Buttons
 

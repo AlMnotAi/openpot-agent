@@ -8,5 +8,43 @@
     "http_server": false,
     "http_server_port": null
   },
-  "features": {}
+  "features": {
+    "chat": {
+      "enabled": true,
+      "version": 1
+    },
+    "pulse_cards": {
+      "enabled": false,
+      "version": null,
+      "note": "Requires HTTP server with /api/cards endpoints"
+    },
+    "pulse_expansion": {
+      "enabled": false,
+      "version": null,
+      "note": "Requires pulse_cards"
+    },
+    "calendar": {
+      "enabled": false,
+      "version": null,
+      "note": "Requires HTTP server with GET /api/calendar/events"
+    },
+    "apps": {
+      "enabled": false,
+      "version": null,
+      "note": "Requires HTTP server with /api/apps endpoints"
+    },
+    "skills": {
+      "enabled": true,
+      "version": 1
+    },
+    "terminal": {
+      "enabled": false,
+      "version": null,
+      "note": "Requires SSH access configured"
+    },
+    "settings": {
+      "enabled": true,
+      "version": 1
+    }
+  }
 }

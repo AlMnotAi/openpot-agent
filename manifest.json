@@ -1,7 +1,7 @@
 {
-  "manifest_version": 2,
-  "openpot_version": "0.9.1",
-  "updated_at": "2026-04-07T19:00:00Z",
+  "manifest_version": 3,
+  "openpot_version": "0.9.2",
+  "updated_at": "2026-04-09T00:00:00Z",
   "features": [
     {
       "id": "chat",
@@ -52,6 +52,22 @@
       "status_key": "pulse_expansion"
     },
     {
+      "id": "calendar",
+      "name": "Calendar",
+      "version": 1,
+      "required": false,
+      "description": "Calendar tab with Month and Agenda views. Renders events the agent posts to the calendar API. Read-only display — the agent is the source of truth.",
+      "prerequisites": {
+        "gateway": true,
+        "http_server": true,
+        "endpoints": [
+          "GET /api/calendar/events"
+        ]
+      },
+      "insert_file": "inserts/calendar-v1.md",
+      "status_key": "calendar"
+    },
+    {
       "id": "apps",
       "name": "Web Apps",
       "version": 1,
@@ -73,7 +89,7 @@
       "name": "Skills Display",
       "version": 1,
       "required": false,
-      "description": "View and manage agent skills from OpenPot. Reads skill list via gateway WebSocket, displays installed and bundled skills with status and requirements.",
+      "description": "View and manage agent skills from OpenPot. Reads skill list via gateway WebSocket, displays installed and bundled skills with status and requirements. Accessible within the Agents tab (no longer a standalone tab).",
       "prerequisites": {
         "gateway": true
       },
@@ -91,6 +107,18 @@
       },
       "insert_file": null,
       "status_key": "terminal"
+    },
+    {
+      "id": "settings",
+      "name": "Settings",
+      "version": 1,
+      "required": false,
+      "description": "App settings accessible via the gear icon in the agent dock. Includes gateway configuration, connection management, and appearance options.",
+      "prerequisites": {
+        "gateway": true
+      },
+      "insert_file": null,
+      "status_key": "settings"
     }
   ]
 }
