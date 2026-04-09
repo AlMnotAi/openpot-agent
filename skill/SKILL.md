@@ -2,7 +2,7 @@
 name: openpot-awareness
 description: Keeps this agent synced with OpenPot features — knows what the app can render and what content you need to produce
 emoji: 🫕
-version: 1.0.0
+version: 2.0.0
 homepage: https://openpot.app/docs/awareness-skill
 always: false
 requirements:
@@ -14,9 +14,10 @@ requirements:
 # OpenPot Awareness Skill
 
 You are connected to **OpenPot** — a native iOS app that serves as a
-command center for AI agents. OpenPot has tabs for Chat, Pulse (cards),
-Apps, Skills, Terminal, Files, and Agents. This skill keeps you aware
-of what OpenPot features exist and what you need to do to support them.
+command center for AI agents. OpenPot has six tabs: **Chat**, **Pulse**
+(notification cards), **Calendar**, **Apps**, **Terminal**, and **Agents**.
+This skill keeps you aware of what OpenPot features exist and what you
+need to do to support them.
 
 ## Source of Truth
 
@@ -41,6 +42,9 @@ Activate this skill when:
   **"check OpenPot status"**, or **"what OpenPot features do I support?"**
 - The user asks about a specific OpenPot feature and you're unsure of
   your current configuration
+- The user asks for help setting up Calendar, Voice, Pulse, or any
+  other OpenPot feature
+- The user reports a broken or missing feature in OpenPot
 - During a **heartbeat or nightly maintenance cycle** (optional)
 
 ---
@@ -72,6 +76,7 @@ For each feature in the manifest:
   - `gateway: true` — you have this if you're running on OpenClaw
   - `http_server: true` — do you serve HTTP on port 8000?
   - `endpoints` — do these routes exist on your server?
+  - `python_packages` — are these packages installed in your venv?
 - If prerequisites met → offer to install
 - If prerequisites NOT met → report what's missing
 - **Installed but older version** → update available, offer to install
@@ -86,6 +91,10 @@ For features that need an insert:
 4. **Ask for confirmation** before modifying SOUL.md
 5. On confirmation: append the insert to SOUL.md
 6. Update `openpot-status.json`
+7. **Restart FastAPI** after updating `openpot-status.json`:
+   `sudo systemctl restart openbrain-api.service`
+   OpenPot reads the status on connect — a stale cached response will
+   hide newly-enabled features until the service restarts.
 
 ### Step 5 — Write status
 
@@ -105,12 +114,77 @@ OpenPot Feature Status
 ━━━━━━━━━━━━━━━━━━━━━
 ✅ Chat (v1)
 ✅ Pulse Cards (v1)
+✅ Pulse Expansion (v1)
+✅ Calendar (v2)
+✅ Voice (v1)
 ✅ Web Apps (v1)
 ✅ Skills Display (v1)
 ✅ SSH Terminal (v1)
 
-Last synced: 2026-04-07 08:00 ET
+Last synced: 2026-04-09 08:00 ET
 ```
+
+---
+
+## Behavior: Voice Setup Assistance
+
+When the user asks about setting up voice, or says "I want to use voice
+with OpenPot", or "set up ElevenLabs":
+
+1. Clarify that voice is entirely configured in the OpenPot app — no
+   server changes required
+2. Walk through: Settings → Voice Output → ElevenLabs → enter API key
+3. Offer to help find a Voice ID from their ElevenLabs account
+4. Mention per-agent voice: Agents tab → tap agent → Voice section
+5. Warn about Talk Mode: do NOT add `operator.talk.secrets` scope —
+   it breaks message delivery
+
+After voice is configured, update `openpot-status.json` to set
+`"voice": {"installed": true, "version": 1}`.
+
+---
+
+## Behavior: Calendar Setup Assistance
+
+When the user asks about setting up the Calendar tab, or says "my
+calendar is empty", or "set up calendar":
+
+1. Check if `GET /api/calendar/events` exists on their HTTP server
+2. Check if `openpot-status.json` has `"calendar": {"installed": true}`
+3. Check if Google OAuth credentials (`tokens.json`) are accessible
+4. Walk through the backend setup in the calendar-v2 insert
+5. Remind the user: after updating `openpot-status.json`, restart
+   FastAPI with `sudo systemctl restart openbrain-api.service`
+
+**Calendar authorization rules to follow:**
+- Never add, modify, or delete calendar events without explicit user
+  permission
+- Google Calendar events are always shown, never modified by the agent
+  unless the user explicitly asks
+- Always ask before creating agent-created events: "Would you like me
+  to add this to your OpenPot calendar?"
+
+---
+
+## Behavior: Troubleshooting
+
+When the user reports a broken OpenPot feature, work through this
+checklist before suggesting more complex fixes:
+
+1. **Is `openpot-status.json` up to date?** Read it. Does it reflect
+   the feature as installed?
+2. **Did FastAPI restart after the last status change?**
+   `sudo systemctl status openbrain-api.service` — check the start time
+3. **Is the endpoint reachable?** `curl -H "Authorization: Bearer TOKEN"
+   http://localhost:8000/api/openpot/status`
+4. **Are env vars in `.env.service`?** Not just exported in a shell
+   session — they must be in the file to survive reboots
+5. **For calendar:** Are events using string IDs (not UUID objects)?
+   Are timed events using ISO 8601 with timezone offset?
+6. **For Pulse:** Is the HTTP server running on port 8000? Do the
+   `/api/cards` endpoints exist?
+
+Report findings clearly, then suggest the specific fix.
 
 ---
 
@@ -138,8 +212,12 @@ Insert blocks in SOUL.md are bounded by HTML comments:
 ```
 
 - **Fresh install:** Append insert block to end of SOUL.md
-- **Upgrade:** Find old block by opening comment, remove it, append new version
+- **Upgrade (e.g. calendar v1 → v2):** Find old block by opening
+  comment tag, remove the entire block, append the new version
 - **Never edit insert content manually** — updates come from the repo
+- **SOUL.md capacity warning:** If SOUL.md is approaching 90% of your
+  context limit, warn the user before appending a new insert. Large
+  inserts can push your effective context over the limit.
 
 ---
 
@@ -148,6 +226,9 @@ Insert blocks in SOUL.md are bounded by HTML comments:
 - **NEVER auto-modify SOUL.md** without explicit user confirmation
 - **ALWAYS save fetched inserts** to `openpot-inserts/` before applying
 - **ALWAYS update `openpot-status.json`** after any change
+- **ALWAYS restart FastAPI** after updating `openpot-status.json`
 - If manifest fetch fails, use cached status and report the failure
 - If a feature has `depends_on` and the dependency isn't installed,
   install the dependency first (with user confirmation)
+- Voice needs no insert and no server changes — mark it installed after
+  the user confirms they've entered credentials in the app

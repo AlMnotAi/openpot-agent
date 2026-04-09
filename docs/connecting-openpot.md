@@ -111,9 +111,15 @@ When OpenPot connects to your agent, it reads the agent's feature status from:
 GET http://<your-server>:8000/api/openpot/status
 ```
 
-This endpoint serves the `openpot-status.json` file that the awareness skill creates. It tells OpenPot which features your agent supports — Pulse cards, web apps, calendar, terminal, and any future features.
+This endpoint serves the `openpot-status.json` file that the awareness skill creates. It tells OpenPot which features your agent supports — Pulse cards, web apps, calendar, voice, terminal, and any future features.
 
 If your agent doesn't have the awareness skill installed yet, or doesn't have an HTTP server on port 8000, OpenPot defaults to showing all tabs. Nothing breaks — the status check is optional.
+
+**Important:** After updating `openpot-status.json`, restart your FastAPI service so OpenPot receives the new status on next connect:
+
+```bash
+sudo systemctl restart openbrain-api.service
+```
 
 ---
 
@@ -124,10 +130,13 @@ If your agent doesn't have the awareness skill installed yet, or doesn't have an
 | Chat | Gateway only | Real-time chat, streaming responses, message history |
 | Pulse Cards | Gateway + HTTP server + card endpoints | Proactive notification cards |
 | Pulse Expansion | Pulse Cards | Tap-to-expand report cards with full markdown |
-| Calendar | Gateway + HTTP server + `/api/calendar/events` | Month and Agenda views of agent-managed events |
+| Calendar | Gateway + HTTP server + `/api/calendar/events` | Month and Agenda views with Google Calendar sync |
+| Voice | Gateway only (user enters credentials in app) | Mic input + ElevenLabs or System Voice TTS output |
 | Web Apps | Gateway + HTTP server + app endpoints | In-app browser for agent-built HTML tools |
 | Skills | Gateway only | View installed and available skills (in Agents tab) |
 | Terminal | Gateway only | SSH connection to your server |
+
+Voice requires no server setup — the user enters ElevenLabs credentials in OpenPot Settings on each device. Each device that uses OpenPot needs its own credentials entered separately.
 
 The Calendar tab requires your HTTP server to implement `GET /api/calendar/events`. If the endpoint isn't available, the Calendar tab shows empty. Tell your agent to set it up:
 
@@ -151,14 +160,31 @@ The Calendar tab requires your HTTP server to implement `GET /api/calendar/event
 - Tell your agent to approve the device: "Approve the OpenPot device"
 - If your agent can't do it, on the server run: `openclaw devices approve`
 
-**Connected but Pulse tab is empty:**
-- Your agent needs the OpenPot Awareness Skill installed (see above)
-- Your agent needs an HTTP server on port 8000 with card endpoints for Pulse cards
-- If you only have the gateway, Chat will work but Pulse, Apps, and Calendar need additional backend setup
+**Connected but Pulse tab shows "No Pulse Server":**
+- Your agent needs an HTTP server on port 8000 with card endpoints
+- Run `curl http://YOUR_SERVER_IP:8000/api/cards` to verify the endpoint exists
+- If the endpoint returns 500: check that env vars (OPENBRAIN_API_TOKEN, POSTGRES_PASSWORD) are in `/opt/openbrain/.env.service` — not just exported in a shell session. Variables set with `export` in a shell do not survive service restarts.
+- After fixing the env file: `sudo systemctl daemon-reload && sudo systemctl restart openbrain-api.service`
+- Check `openpot-status.json` has `"pulse_cards": {"enabled": true}`
+- Restart FastAPI after any status file change
 
 **Calendar tab is empty:**
 - Your agent needs `GET /api/calendar/events` implemented on its HTTP server
 - Tell your agent: "OpenPot sync" — it will check what's needed and set it up
+- If you had calendar working before and it stopped: check that env vars survived the last server reboot (see Pulse 500 fix above — same root cause)
+- See also: the 9 calendar pitfalls in the calendar-v2 insert (fetch via OpenPot sync)
+
+**Calendar shows events but wrong colors:**
+- Ensure `calendar_color` is set on each event from the Google Calendar's native `backgroundColor`
+- The app uses `calendar_color` first; if missing it falls back to source-based defaults
+
+**Voice mic button does nothing:**
+- iOS speech recognition permission may be denied: Settings → Privacy & Security → Speech Recognition → enable OpenPot
+- Speak more clearly and closer to the mic
+
+**ElevenLabs voice not playing:**
+- API key not set or expired: Settings → Voice Output → re-enter API key
+- Check per-agent Voice ID is set in Agents tab → tap agent → Voice section
 
 **Agent name shows as blank:**
 - Your agent needs IDENTITY.md configured in its workspace with a name and emoji

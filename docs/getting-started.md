@@ -58,26 +58,51 @@ The sync will install the expansion feature directives so your agent starts incl
 
 ## Explore the Calendar Tab
 
-The Calendar tab shows events your agent tracks — meetings, deadlines, cron job schedules, reminders, and anything else time-bound. Your agent is the source of truth; the calendar displays what it knows.
-
-**Populate your calendar:**
-
-> "Add my usual Monday portfolio review to my OpenPot calendar — every Monday at 4:30 PM"
-
-> "Track my upcoming appointments in the OpenPot calendar"
-
-> "Add a reminder for my oil change — it's due April 20"
+The Calendar tab shows your Google Calendar events and anything else your agent tracks — meetings, deadlines, cron job schedules, reminders, and anything else time-bound.
 
 **Switch between views:**
 
 The Calendar tab has two views you can toggle between:
 
-- **Month** — grid view with dot indicators on days that have events
+- **Month** — grid view with colored dot indicators on days that have events. Tap a day to see its events. Tap "Show Events" to expand cells with event titles.
 - **Agenda** — chronological list from today through the end of next month, grouped by day with sticky date headers
 
-If your Calendar tab is empty, your agent needs the calendar API endpoint set up. Tell your agent:
+**Your Google Calendar appears automatically** when your agent has the calendar API endpoint set up. Ask your agent:
 
 > "OpenPot sync"
+
+Your agent will check what's needed and set up the calendar endpoint to pull your Google Calendar events with their native colors.
+
+**Authorization rules:**
+
+Your agent **never** adds, modifies, or deletes calendar events without your explicit permission. Google Calendar events are read-only. If you want your agent to add something, ask specifically:
+
+> "Add my Monday portfolio review to my OpenPot calendar — every Monday at 4:30 PM"
+
+> "Add a reminder for my oil change — it's due April 20"
+
+Your agent will confirm before creating anything on your calendar.
+
+---
+
+## Use Voice
+
+OpenPot supports voice input and output. Tap and hold the **mic button** in the chat input bar to speak. Your message is transcribed on-device and sent to your agent.
+
+For voice responses (your agent speaking back to you), set up ElevenLabs:
+
+1. Get an API key at elevenlabs.io
+2. In OpenPot: **Settings → Voice Output → ElevenLabs**
+3. Enter your API key and a Voice ID
+
+Your agent doesn't need any server changes for voice — it's all handled in the app.
+
+**Per-agent voice:** Each agent can have its own voice. Go to **Agents tab → tap your agent → Voice** to set a Voice ID and playback speed for that agent specifically.
+
+**Voice output modes:**
+- **ElevenLabs** — high-quality, requires API key
+- **System Voice** — free Apple TTS, works offline
+- **Off** — text only
 
 ---
 
@@ -129,7 +154,7 @@ OpenPot's chat works like any conversation with your agent, but it's on your pho
 
 ## Skills
 
-The Agents tab → tap your agent → Skills shows what capabilities your agent has — web search, email, calendar access, file tools, and more. You don't need to configure anything here, but it's useful to see what's available.
+The **Agents tab → tap your agent → Skills** shows what capabilities your agent has — web search, email, calendar access, file tools, and more. You don't need to configure anything here, but it's useful to see what's available.
 
 > "What skills do you have?"
 
@@ -147,21 +172,27 @@ If you're technical, the Terminal tab gives you a direct SSH connection to your 
 
 ## Settings
 
-Tap the **gear icon** at the bottom of the agent dock (the left sidebar) to open Settings. This is where you manage gateway connections, connection routes, and app appearance.
+Tap the **gear icon** at the bottom of the agent dock (the left sidebar on iPad, the trailing edge of the tab bar on iPhone) to open Settings. This is where you manage:
+
+- **Gateway configuration** — connection routes
+- **Voice output** — ElevenLabs API key, Voice ID, Model
+- **Display** — text size, help banners
 
 ---
 
 ## Agent Themes
 
-Each agent can have its own color theme so you can tell at a glance which agent you're talking to. Go to the Agents tab, tap your agent, and pick a theme from the color swatches. The theme tints the chat bubbles, sidebar, and dock indicator.
+Each agent can have its own color theme so you can tell at a glance which agent you're talking to. Go to the **Agents tab**, tap your agent, and pick a theme from the color swatches. The theme tints the chat bubbles, sidebar, and dock indicator.
 
 ---
 
 ## Multiple Agents
 
-OpenPot supports multiple agents. Each agent gets its own dock icon on the left side of the screen. Tap an agent to switch — the entire app context changes to that agent's chat, cards, apps, and calendar.
+OpenPot supports multiple agents. Each agent gets its own dock icon on the left side of the screen (iPad) or below the tab bar (iPhone). Tap an agent to switch — the entire app context changes to that agent's chat, cards, apps, and calendar.
 
-To add a second agent, go to the Agents tab and tap the + button. You'll need the gateway address and token for the new agent (see the connection guide).
+To add a second agent, go to the **Agents tab** and tap the **+** button. You'll need the gateway address and token for the new agent (see the connection guide).
+
+**Note:** Voice credentials (ElevenLabs API key, Voice ID) are stored per-device, not per-agent. Each phone or iPad needs its own credentials entered in Settings. You can set different Voice IDs per-agent, but the API key is global.
 
 ---
 

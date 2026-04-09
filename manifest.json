@@ -1,6 +1,6 @@
 {
-  "manifest_version": 3,
-  "openpot_version": "0.9.2",
+  "manifest_version": 4,
+  "openpot_version": "0.9.3",
   "updated_at": "2026-04-09T00:00:00Z",
   "features": [
     {
@@ -54,18 +54,35 @@
     {
       "id": "calendar",
       "name": "Calendar",
-      "version": 1,
+      "version": 2,
       "required": false,
-      "description": "Calendar tab with Month and Agenda views. Renders events the agent posts to the calendar API. Read-only display — the agent is the source of truth.",
+      "description": "Calendar tab with Month and Agenda views. Renders events from the calendar API including full Google Calendar multi-calendar sync with native colors. The id field must be a string. Date format: ISO 8601 with offset for timed events, YYYY-MM-DD for all-day.",
       "prerequisites": {
         "gateway": true,
         "http_server": true,
         "endpoints": [
           "GET /api/calendar/events"
+        ],
+        "python_packages": [
+          "google-api-python-client",
+          "google-auth-oauthlib",
+          "google-auth-httplib2"
         ]
       },
-      "insert_file": "inserts/calendar-v1.md",
+      "insert_file": "inserts/calendar-v2.md",
       "status_key": "calendar"
+    },
+    {
+      "id": "voice",
+      "name": "Voice",
+      "version": 1,
+      "required": false,
+      "description": "On-device voice input via Apple Speech (SFSpeechRecognizer) and voice output via ElevenLabs TTS or Apple AVSpeechSynthesizer. Entirely client-side — no server changes required. Per-agent Voice ID and playback speed configurable in Agents tab.",
+      "prerequisites": {
+        "gateway": true
+      },
+      "insert_file": "inserts/voice-v1.md",
+      "status_key": "voice"
     },
     {
       "id": "apps",
@@ -89,7 +106,7 @@
       "name": "Skills Display",
       "version": 1,
       "required": false,
-      "description": "View and manage agent skills from OpenPot. Reads skill list via gateway WebSocket, displays installed and bundled skills with status and requirements. Accessible within the Agents tab (no longer a standalone tab).",
+      "description": "View and manage agent skills from OpenPot. Reads skill list via gateway WebSocket, displays installed and bundled skills with status and requirements. Accessible within the Agents tab.",
       "prerequisites": {
         "gateway": true
       },
@@ -113,7 +130,7 @@
       "name": "Settings",
       "version": 1,
       "required": false,
-      "description": "App settings accessible via the gear icon in the agent dock. Includes gateway configuration, connection management, and appearance options.",
+      "description": "App settings accessible via the gear icon in the agent dock. Includes gateway configuration, connection management, appearance options, and voice output picker (ElevenLabs / System Voice / Off) with API key storage.",
       "prerequisites": {
         "gateway": true
       },
