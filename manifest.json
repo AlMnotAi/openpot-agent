@@ -1,7 +1,7 @@
 {
   "manifest_version": 4,
   "openpot_version": "0.9.3",
-  "updated_at": "2026-04-09T00:00:00Z",
+  "updated_at": "2026-04-10T00:00:00Z",
   "features": [
     {
       "id": "chat",
@@ -50,6 +50,20 @@
       },
       "insert_file": "inserts/pulse-expansion-v1.md",
       "status_key": "pulse_expansion"
+    },
+    {
+      "id": "pulse-channels",
+      "name": "Pulse Channels",
+      "version": 1,
+      "required": false,
+      "description": "Canonical categories, origin field, and delivery mode awareness for Pulse channel routing",
+      "prerequisites": {
+        "gateway": true,
+        "http_server": true
+      },
+      "depends_on": ["pulse-cards"],
+      "insert_file": "inserts/pulse-channels-v1.md",
+      "status_key": "pulse_channels"
     },
     {
       "id": "calendar",
