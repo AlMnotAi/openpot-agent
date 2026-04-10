@@ -1,5 +1,5 @@
 {
-  "manifest_version": 4,
+  "manifest_version": 5,
   "openpot_version": "0.9.3",
   "updated_at": "2026-04-10T00:00:00Z",
   "features": [
@@ -150,6 +150,23 @@
       },
       "insert_file": null,
       "status_key": "settings"
+    },
+    {
+      "id": "chat-backup-search",
+      "name": "Chat Backup & Search",
+      "version": 1,
+      "required": false,
+      "description": "Server-side chat storage with PostgreSQL — backs up device chat history and enables full-text search",
+      "prerequisites": {
+        "gateway": true,
+        "http_server": true,
+        "endpoints": [
+          "/api/chat/messages",
+          "/api/chat/sessions"
+        ]
+      },
+      "insert_file": "inserts/chat-backup-search-v1.md",
+      "status_key": "chat_backup_search"
     }
   ]
 }
