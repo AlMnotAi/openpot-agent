@@ -37,7 +37,6 @@
     padding: 24px 20px 80px;
   }
 
-  /* Hero */
   .hero {
     text-align: center;
     padding: 40px 0 32px;
@@ -56,220 +55,48 @@
     box-shadow: 0 8px 32px var(--accent-glow);
   }
 
-  .hero h1 {
-    font-size: 32px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    margin-bottom: 4px;
-  }
+  .hero h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 4px; }
+  .hero .version { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; }
+  .hero .tagline { font-size: 17px; color: var(--text-muted); max-width: 320px; margin: 0 auto; line-height: 1.5; }
 
-  .hero .version {
-    font-size: 14px;
-    color: var(--text-muted);
-    margin-bottom: 12px;
-  }
+  .section { margin-bottom: 32px; }
+  .section-title { font-size: 13px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 12px; padding-left: 4px; }
 
-  .hero .tagline {
-    font-size: 17px;
-    color: var(--text-muted);
-    font-weight: 400;
-    max-width: 320px;
-    margin: 0 auto;
-    line-height: 1.5;
-  }
+  .card { background: var(--surface); border-radius: var(--radius); padding: 20px; margin-bottom: 12px; }
+  .card h3 { font-size: 17px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+  .card h3 .icon { font-size: 20px; width: 28px; text-align: center; }
+  .card p { font-size: 15px; color: var(--text-muted); line-height: 1.55; padding-left: 38px; }
 
-  /* Section */
-  .section {
-    margin-bottom: 32px;
-  }
-
-  .section-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    margin-bottom: 12px;
-    padding-left: 4px;
-  }
-
-  /* Cards */
-  .card {
-    background: var(--surface);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-bottom: 12px;
-  }
-
-  .card h3 {
-    font-size: 17px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .card h3 .icon {
-    font-size: 20px;
-    width: 28px;
-    text-align: center;
-  }
-
-  .card p {
-    font-size: 15px;
-    color: var(--text-muted);
-    line-height: 1.55;
-    padding-left: 38px;
-  }
-
-  /* Tab list */
-  .tab-list {
-    background: var(--surface);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-
-  .tab-item {
-    padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    border-bottom: 1px solid var(--surface-2);
-  }
-
-  .tab-item:last-child {
-    border-bottom: none;
-  }
-
-  .tab-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-
+  .tab-list { background: var(--surface); border-radius: var(--radius); overflow: hidden; }
+  .tab-item { padding: 14px 20px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--surface-2); }
+  .tab-item:last-child { border-bottom: none; }
+  .tab-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
   .tab-icon.chat { background: rgba(74, 158, 255, 0.15); }
   .tab-icon.pulse { background: rgba(200, 164, 78, 0.15); }
   .tab-icon.calendar { background: rgba(48, 209, 88, 0.15); }
   .tab-icon.apps { background: rgba(175, 82, 222, 0.15); }
   .tab-icon.terminal { background: rgba(255, 159, 10, 0.15); }
   .tab-icon.agents { background: rgba(255, 69, 58, 0.15); }
+  .tab-info { flex: 1; min-width: 0; }
+  .tab-name { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+  .tab-desc { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
 
-  .tab-info {
-    flex: 1;
-    min-width: 0;
-  }
+  .story { background: var(--surface); border-radius: var(--radius); padding: 24px 20px; }
+  .story p { font-size: 15px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; }
+  .story p:last-child { margin-bottom: 0; }
+  .story em { color: var(--text); font-style: italic; }
+  .story .quote { border-left: 3px solid var(--accent); padding-left: 16px; margin: 20px 0; font-size: 16px; color: var(--text); font-style: italic; line-height: 1.5; }
 
-  .tab-name {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 2px;
-  }
+  .req-card { background: var(--surface); border-radius: var(--radius); padding: 20px; }
+  .req-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--surface-2); }
+  .req-item:last-child { border-bottom: none; }
+  .req-check { color: var(--green); font-size: 16px; margin-top: 2px; }
+  .req-text { font-size: 15px; color: var(--text-muted); line-height: 1.4; }
+  .req-text strong { color: var(--text); }
 
-  .tab-desc {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.4;
-  }
+  .footer { text-align: center; padding: 32px 0 16px; color: var(--text-dim); font-size: 13px; line-height: 1.6; }
+  .footer a { color: var(--accent); text-decoration: none; }
 
-  /* Origin story */
-  .story {
-    background: var(--surface);
-    border-radius: var(--radius);
-    padding: 24px 20px;
-  }
-
-  .story p {
-    font-size: 15px;
-    color: var(--text-muted);
-    line-height: 1.65;
-    margin-bottom: 16px;
-  }
-
-  .story p:last-child {
-    margin-bottom: 0;
-  }
-
-  .story em {
-    color: var(--text);
-    font-style: italic;
-  }
-
-  .story .quote {
-    border-left: 3px solid var(--accent);
-    padding-left: 16px;
-    margin: 20px 0;
-    font-size: 16px;
-    color: var(--text);
-    font-style: italic;
-    line-height: 1.5;
-  }
-
-  /* Tier badges */
-  .tiers {
-    background: var(--surface);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-
-  .tier {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--surface-2);
-  }
-
-  .tier:last-child { border-bottom: none; }
-
-  .tier-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 6px;
-  }
-
-  .tier-badge {
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .tier-badge.t1 { background: rgba(48, 209, 88, 0.15); color: var(--green); }
-  .tier-badge.t2 { background: rgba(74, 158, 255, 0.15); color: var(--blue); }
-  .tier-badge.t3 { background: rgba(200, 164, 78, 0.15); color: var(--accent); }
-
-  .tier-name {
-    font-size: 16px;
-    font-weight: 600;
-  }
-
-  .tier-desc {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.4;
-  }
-
-  /* Footer */
-  .footer {
-    text-align: center;
-    padding: 32px 0 16px;
-    color: var(--text-dim);
-    font-size: 13px;
-    line-height: 1.6;
-  }
-
-  .footer a {
-    color: var(--accent);
-    text-decoration: none;
-  }
-
-  /* Responsive */
   @media (min-width: 768px) {
     .container { padding: 40px 32px 80px; }
     .hero h1 { font-size: 38px; }
@@ -292,7 +119,7 @@
     <div class="story">
       <p>OpenPot started with a simple frustration: powerful self-hosted AI agents trapped behind chat apps that were never designed for them. Telegram threads, Slack channels, terminal windows — none of them could show you what your agent <em>knows</em>, what it's <em>done</em>, or what you should <em>do next</em>.</p>
       <div class="quote">"This app navigates the user so the user does not need to navigate the app."</div>
-      <p>OpenPot is built as the native iOS interface that self-hosted agents deserve. Not a wrapper around a web view. Not a chatbot skin. A real app — with purpose-built surfaces for every dimension of your relationship with your agent.</p>
+      <p>OpenPot is the native iOS interface that self-hosted agents deserve. Not a wrapper around a web view. Not a chatbot skin. A real app with purpose-built surfaces for every dimension of your relationship with your agent.</p>
       <p>It connects to any agent running on the OpenClaw framework via secure WebSocket, with Ed25519 device authentication. Your data stays on your server. Nothing passes through a cloud service. The app talks directly to your agent over your network.</p>
     </div>
   </div>
@@ -318,56 +145,51 @@
         <div class="tab-icon calendar">📅</div>
         <div class="tab-info">
           <div class="tab-name">Calendar</div>
-          <div class="tab-desc">Your schedule rendered from your agent's perspective. Multi-source calendar integration with month and agenda views.</div>
+          <div class="tab-desc">Your schedule rendered from your agent's perspective. Multi-source calendar integration with month and agenda views. Your agent reads your calendar but never modifies it without your permission.</div>
         </div>
       </div>
       <div class="tab-item">
         <div class="tab-icon apps">🧩</div>
         <div class="tab-info">
           <div class="tab-name">Apps</div>
-          <div class="tab-desc">Custom web applications your agent built for you — calculators, trackers, dashboards. Your personal app store, created on demand.</div>
+          <div class="tab-desc">Custom web applications your agent built for you — calculators, trackers, dashboards. Browse by category, tap to open full-screen. Ask your agent to build you something new anytime.</div>
         </div>
       </div>
       <div class="tab-item">
         <div class="tab-icon terminal">⌨️</div>
         <div class="tab-info">
           <div class="tab-name">Terminal</div>
-          <div class="tab-desc">Full SSH access to your agent's server. GPU-accelerated terminal with secure key-based authentication.</div>
+          <div class="tab-desc">Full SSH access to your agent's server. GPU-accelerated terminal with secure key-based authentication. Run commands, launch Claude Code, manage your infrastructure.</div>
         </div>
       </div>
       <div class="tab-item">
         <div class="tab-icon agents">🤖</div>
         <div class="tab-info">
           <div class="tab-name">Agents</div>
-          <div class="tab-desc">Manage multiple agents with independent connections, health monitoring, and route configuration. Switch between agents instantly.</div>
+          <div class="tab-desc">Manage multiple agents with independent connections, health monitoring, and route configuration. Switch between agents instantly from the dock.</div>
         </div>
       </div>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-title">Deployment Tiers</div>
-    <div class="tiers">
-      <div class="tier">
-        <div class="tier-header">
-          <span class="tier-badge t1">Tier 1</span>
-          <span class="tier-name">Gateway Only</span>
-        </div>
-        <div class="tier-desc">Connect to any OpenClaw gateway. Chat, Skills, Terminal, and Apps work immediately. Zero backend changes required. Five-minute setup.</div>
+    <div class="section-title">What You Need</div>
+    <div class="req-card">
+      <div class="req-item">
+        <div class="req-check">✓</div>
+        <div class="req-text"><strong>An OpenClaw agent</strong> running on any hardware — Mac Mini, Linux VM, cloud VPS. OpenClaw is the agent framework. OpenPot is the mobile client.</div>
       </div>
-      <div class="tier">
-        <div class="tier-header">
-          <span class="tier-badge t2">Tier 2</span>
-          <span class="tier-name">Gateway + Server</span>
-        </div>
-        <div class="tier-desc">Add PostgreSQL + pgvector for the memory layer. Pulse cards, Calendar integration, and chat persistence come online.</div>
+      <div class="req-item">
+        <div class="req-check">✓</div>
+        <div class="req-text"><strong>The OpenClaw gateway</strong> running on port 18789. This is the WebSocket server that OpenPot connects to. It comes with every OpenClaw installation.</div>
       </div>
-      <div class="tier">
-        <div class="tier-header">
-          <span class="tier-badge t3">Tier 3</span>
-          <span class="tier-name">Full Stack</span>
-        </div>
-        <div class="tier-desc">Agent operational cycle with adaptive cards, engagement scoring, and learning loop. The dashboard that learns from how you use it.</div>
+      <div class="req-item">
+        <div class="req-check">✓</div>
+        <div class="req-text"><strong>Network access</strong> to your server. On your home WiFi, use your server's LAN address. Away from home, use Tailscale for secure remote access. OpenPot supports both with automatic failover.</div>
+      </div>
+      <div class="req-item">
+        <div class="req-check">✓</div>
+        <div class="req-text"><strong>The OpenPot Awareness Skill</strong> installed on your agent. This teaches your agent how to serve content to each tab — Pulse cards, calendar events, web apps, and more.</div>
       </div>
     </div>
   </div>
@@ -380,11 +202,23 @@
     </div>
     <div class="card">
       <h3><span class="icon">📦</span> Install the Skill</h3>
-      <p>Tell your agent: "Install the OpenPot Awareness Skill." Then run "OpenPot sync." Your agent configures itself for all the features it can support.</p>
+      <p>Tell your agent: "Install the OpenPot Awareness Skill." Then say "OpenPot sync." Your agent configures itself for all the features it can support.</p>
     </div>
     <div class="card">
       <h3><span class="icon">🗣️</span> Start Talking</h3>
       <p>Chat, use voice, ask your agent to build you an app, check your calendar, browse your Pulse cards. The app is your agent's home screen.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Building Apps</div>
+    <div class="card">
+      <h3><span class="icon">💬</span> Just Ask</h3>
+      <p>Tell your agent what you need: "Build me a unit converter" or "I need a medication tracker." Your agent confirms the details and creates it. It appears in your Apps tab automatically.</p>
+    </div>
+    <div class="card">
+      <h3><span class="icon">⌨️</span> Claude Code</h3>
+      <p>For more sophisticated apps, open the Terminal tab and launch Claude Code. Your agent will brief Claude Code on the app standard so it integrates properly with OpenPot.</p>
     </div>
   </div>
 
