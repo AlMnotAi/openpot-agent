@@ -2,7 +2,7 @@
 name: openpot-awareness
 description: Keeps this agent synced with OpenPot features — knows what the app can render and what content you need to produce
 emoji: 🫕
-version: 2.0.0
+version: 3.0.0
 homepage: https://openpot.app/docs/awareness-skill
 always: false
 requirements:
@@ -51,23 +51,34 @@ Activate this skill when:
 
 ## Behavior: Full Sync
 
-### Step 1 — Fetch the manifest
+### Step 1 — Pull the latest skill repo
 
-Read the file at:
 ```
-https://raw.githubusercontent.com/AlMnotAi/openpot-agent/main/manifest.json
+cd ~/.openclaw/workspace-prod/skills/openpot-awareness
+git pull origin main
 ```
 
-Use your web search or browser tool to fetch it. Parse it as JSON.
-If the fetch fails, report the failure and continue with cached status.
+If the repo is not cloned yet (first-time setup):
+```
+git clone https://github.com/AlMnotAi/openpot-agent.git ~/.openclaw/workspace-prod/skills/openpot-awareness
+```
 
-### Step 2 — Read your current status
+### Step 2 — Read the manifest
+
+Read `manifest.json` from the local skill directory (not the remote URL).
+This is the version you just pulled.
+
+### Step 3 — Read your current status
 
 Read `openpot-status.json` from your workspace root. If the file does
 not exist, this is a first-time setup — treat all features as not
 installed.
 
-### Step 3 — Compare and report
+Compare `manifest_version` in the manifest against the version recorded
+in your status file. If they match, report "Already up to date" and
+stop unless the user explicitly asked for a full sync.
+
+### Step 4 — Compare features and report
 
 For each feature in the manifest:
 
@@ -76,16 +87,16 @@ For each feature in the manifest:
   - `gateway: true` — you have this if you're running on OpenClaw
   - `http_server: true` — do you serve HTTP on port 8000?
   - `endpoints` — do these routes exist on your server?
-  - `python_packages` — are these packages installed in your venv?
 - If prerequisites met → offer to install
 - If prerequisites NOT met → report what's missing
 - **Installed but older version** → update available, offer to install
 
-### Step 4 — Install (with user confirmation)
+### Step 5 — Install inserts (with user confirmation)
 
 For features that need an insert:
 
-1. Fetch the insert file from the repo (URL in `insert_file` field)
+1. Read the insert file from the local skill directory (path in
+   `insert_file` field)
 2. Save a copy to `openpot-inserts/` in your workspace
 3. Show the user what will be added to SOUL.md
 4. **Ask for confirmation** before modifying SOUL.md
@@ -96,7 +107,56 @@ For features that need an insert:
    OpenPot reads the status on connect — a stale cached response will
    hide newly-enabled features until the service restarts.
 
-### Step 5 — Write status
+### Step 6 — Install starter apps (with tracking)
+
+The skill repo includes starter apps in the `apps/` directory. These
+are pre-built web apps that populate the user's Apps tab.
+
+**First-time install:**
+
+1. Copy all `.html` files from the skill repo's `apps/` directory to
+   `~/.openclaw/workspace-prod/apps/`
+2. Create a tracking file at
+   `~/.openclaw/workspace-prod/reference/openpot-starter-apps.json`:
+   ```json
+   {
+     "installed": ["about-openpot.html", "weather.html", "focus-timer.html",
+                    "meeting-cost.html", "subnet-calc.html", "billable-hours.html"],
+     "removed_by_user": [],
+     "last_synced": "2026-04-11T18:00:00Z"
+   }
+   ```
+3. Tell the user: "Installed 6 starter apps. You can find them in
+   your Apps tab."
+
+**Subsequent syncs:**
+
+1. Read `openpot-starter-apps.json`
+2. Compare the repo's `apps/` directory against the tracking file
+3. For each app in the repo:
+   - If it's in `removed_by_user` → **skip it**. Do not re-install.
+   - If it's in `installed` → **update it** (copy the new version over)
+   - If it's new (not in either list) → **install it** and add to
+     `installed`
+4. Update `last_synced` in the tracking file
+5. Report: "Updated 2 apps, installed 1 new app, skipped 1 removed app."
+
+**When the user deletes a starter app:**
+
+If the user says "delete the subnet calculator" or "remove focus timer":
+1. Delete the file from `~/.openclaw/workspace-prod/apps/`
+2. Move the filename from `installed` to `removed_by_user` in the
+   tracking file
+3. Tell the user: "Removed subnet-calc.html. It won't come back on
+   future syncs."
+
+If the user says "bring back the subnet calculator" or "reinstall
+focus timer":
+1. Copy the file from the skill repo's `apps/` directory
+2. Move the filename from `removed_by_user` back to `installed`
+3. Tell the user: "Reinstalled subnet-calc.html."
+
+### Step 7 — Write status
 
 Write the updated `openpot-status.json` to your workspace root.
 
@@ -117,12 +177,41 @@ OpenPot Feature Status
 ✅ Pulse Expansion (v1)
 ✅ Calendar (v2)
 ✅ Voice (v1)
-✅ Web Apps (v1)
+✅ Web Apps (v2)
 ✅ Skills Display (v1)
 ✅ SSH Terminal (v1)
 
-Last synced: 2026-04-09 08:00 ET
+Starter Apps: 6 installed, 0 removed
+Last synced: 2026-04-11 14:00 ET
 ```
+
+---
+
+## Behavior: Update Detection (Nightly)
+
+If you run a nightly maintenance cycle or heartbeat cron:
+
+1. Fetch the remote manifest version only (lightweight check):
+   ```
+   curl -s https://raw.githubusercontent.com/AlMnotAi/openpot-agent/main/manifest.json | head -1
+   ```
+   Or read just the `manifest_version` field.
+2. Compare against the version in your local `openpot-status.json`
+3. If the remote version is higher:
+   - Post a Pulse card to the user:
+     ```json
+     {
+       "title": "OpenPot Skill Update Available",
+       "body": "Version 4 → 5. Say 'OpenPot sync' to update.",
+       "category": "system",
+       "priority": "normal",
+       "origin": "agent_initiated"
+     }
+     ```
+   - Note in your memory: "OpenPot skill update available"
+4. **Do NOT auto-sync.** Do NOT modify SOUL.md. Do NOT copy files.
+   The user triggers the sync when they are ready.
+5. **Do** silently update the check timestamp in `openpot-status.json`
 
 ---
 
@@ -183,21 +272,11 @@ checklist before suggesting more complex fixes:
    Are timed events using ISO 8601 with timezone offset?
 6. **For Pulse:** Is the HTTP server running on port 8000? Do the
    `/api/cards` endpoints exist?
+7. **For Apps:** Does `GET /api/apps` return a JSON array with
+   `filename`, `title`, `description`, `category` fields? No
+   authentication should be required on app endpoints.
 
 Report findings clearly, then suggest the specific fix.
-
----
-
-## Behavior: Nightly Auto-Check (Optional)
-
-If you run a nightly maintenance cycle:
-
-1. Fetch the manifest silently
-2. Compare against `openpot-status.json`
-3. If updates available, note in MEMORY.md:
-   `"OpenPot updates available: [list]. Run 'OpenPot sync' to install."`
-4. **Do NOT auto-modify SOUL.md** without user confirmation
-5. **Do** silently update timestamps in `openpot-status.json`
 
 ---
 
@@ -212,7 +291,7 @@ Insert blocks in SOUL.md are bounded by HTML comments:
 ```
 
 - **Fresh install:** Append insert block to end of SOUL.md
-- **Upgrade (e.g. calendar v1 → v2):** Find old block by opening
+- **Upgrade (e.g. apps v1 → v2):** Find old block by opening
   comment tag, remove the entire block, append the new version
 - **Never edit insert content manually** — updates come from the repo
 - **SOUL.md capacity warning:** If SOUL.md is approaching 90% of your
@@ -223,12 +302,17 @@ Insert blocks in SOUL.md are bounded by HTML comments:
 
 ## Rules
 
+- **NEVER auto-sync** — the user triggers sync with "OpenPot sync"
 - **NEVER auto-modify SOUL.md** without explicit user confirmation
+- **NEVER re-install apps the user deleted** — respect the tracking file
+- **ALWAYS pull the repo first** before reading manifest or inserts
 - **ALWAYS save fetched inserts** to `openpot-inserts/` before applying
 - **ALWAYS update `openpot-status.json`** after any change
 - **ALWAYS restart FastAPI** after updating `openpot-status.json`
-- If manifest fetch fails, use cached status and report the failure
+- If repo pull fails, use cached status and report the failure
 - If a feature has `depends_on` and the dependency isn't installed,
   install the dependency first (with user confirmation)
 - Voice needs no insert and no server changes — mark it installed after
   the user confirms they've entered credentials in the app
+- App endpoints (`/api/apps`, `/api/apps/{filename}`) must NOT require
+  authentication — the app list and app content are not sensitive data
