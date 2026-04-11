@@ -1,14 +1,16 @@
 {
-  "manifest_version": 5,
-  "openpot_version": "0.9.3",
-  "updated_at": "2026-04-10T00:00:00Z",
+  "manifest_version": 4,
+  "skill_id": "openpot-awareness",
+  "skill_name": "OpenPot Awareness",
+  "description": "Teaches your OpenClaw agent how to serve content to the OpenPot iOS client across all six tabs: Chat, Pulse, Calendar, Apps, Terminal, and Agents.",
+  "repository": "https://github.com/AlMnotAi/openpot-agent",
   "features": [
     {
       "id": "chat",
       "name": "Chat",
       "version": 1,
       "required": true,
-      "description": "Real-time chat via WebSocket gateway protocol with streaming responses",
+      "description": "Core conversational interface via OpenClaw gateway WebSocket. Streaming responses, markdown rendering, voice input/output, message persistence.",
       "prerequisites": {
         "gateway": true
       },
@@ -16,94 +18,60 @@
       "status_key": "chat"
     },
     {
-      "id": "pulse-cards",
+      "id": "pulse_cards",
       "name": "Pulse Cards",
       "version": 1,
       "required": false,
-      "description": "Proactive notification cards grouped by category with swipe-to-dismiss, card stacks, and agent badges",
+      "description": "Proactive notification cards delivered to the Pulse tab. Supports categories, priorities, expanded body with markdown, and action buttons.",
       "prerequisites": {
         "gateway": true,
         "http_server": true,
         "endpoints": [
-          "GET /api/cards",
-          "POST /api/cards",
-          "PATCH /api/cards/{id}/read",
-          "PATCH /api/cards/{id}/dismiss"
+          "POST /api/cards"
         ]
       },
       "insert_file": "inserts/pulse-cards-v1.md",
       "status_key": "pulse_cards"
     },
     {
-      "id": "pulse-expansion",
+      "id": "pulse_expansion",
       "name": "Pulse Card Expansion",
       "version": 1,
       "required": false,
-      "description": "Tap-to-expand cards with full markdown reports. Report cards carry an expanded_body field and optional action buttons. The app renders a detail sheet with the complete content.",
+      "description": "Tap-to-expand on Pulse cards. Cards with expanded_body show a detail sheet with rendered markdown and optional action buttons.",
       "prerequisites": {
         "gateway": true,
         "http_server": true,
         "endpoints": [
           "POST /api/cards"
         ],
-        "depends_on": ["pulse-cards"]
+        "depends_on": ["pulse_cards"]
       },
       "insert_file": "inserts/pulse-expansion-v1.md",
       "status_key": "pulse_expansion"
-    },
-    {
-      "id": "pulse-channels",
-      "name": "Pulse Channels",
-      "version": 1,
-      "required": false,
-      "description": "Canonical categories, origin field, and delivery mode awareness for Pulse channel routing",
-      "prerequisites": {
-        "gateway": true,
-        "http_server": true
-      },
-      "depends_on": ["pulse-cards"],
-      "insert_file": "inserts/pulse-channels-v1.md",
-      "status_key": "pulse_channels"
     },
     {
       "id": "calendar",
       "name": "Calendar",
       "version": 2,
       "required": false,
-      "description": "Calendar tab with Month and Agenda views. Renders events from the calendar API including full Google Calendar multi-calendar sync with native colors. The id field must be a string. Date format: ISO 8601 with offset for timed events, YYYY-MM-DD for all-day.",
+      "description": "Multi-source calendar integration with month and agenda views. Agent provides events via /api/calendar/events. Agent never modifies calendar without user permission.",
       "prerequisites": {
         "gateway": true,
         "http_server": true,
         "endpoints": [
           "GET /api/calendar/events"
-        ],
-        "python_packages": [
-          "google-api-python-client",
-          "google-auth-oauthlib",
-          "google-auth-httplib2"
         ]
       },
       "insert_file": "inserts/calendar-v2.md",
       "status_key": "calendar"
     },
     {
-      "id": "voice",
-      "name": "Voice",
-      "version": 1,
-      "required": false,
-      "description": "On-device voice input via Apple Speech (SFSpeechRecognizer) and voice output via ElevenLabs TTS or Apple AVSpeechSynthesizer. Entirely client-side — no server changes required. Per-agent Voice ID and playback speed configurable in Agents tab.",
-      "prerequisites": {
-        "gateway": true
-      },
-      "insert_file": "inserts/voice-v1.md",
-      "status_key": "voice"
-    },
-    {
       "id": "apps",
       "name": "Web Apps",
-      "version": 1,
+      "version": 2,
       "required": false,
-      "description": "Agent-generated standalone HTML apps served in WKWebView, listed with pull-to-refresh and frequency sorting",
+      "description": "Agent-generated web apps displayed in a categorized grid with bottom drawer navigation. Apps require a category field. Three creation types: self-contained HTML, HTML + backend service, Claude Code assisted.",
       "prerequisites": {
         "gateway": true,
         "http_server": true,
@@ -112,15 +80,27 @@
           "GET /api/apps/{filename}"
         ]
       },
-      "insert_file": "inserts/apps-v1.md",
+      "insert_file": "inserts/apps-v2.md",
       "status_key": "apps"
+    },
+    {
+      "id": "voice",
+      "name": "Voice",
+      "version": 1,
+      "required": false,
+      "description": "Voice input via Apple Speech STT and voice output via ElevenLabs TTS. Per-agent voice ID, model, and speed configuration.",
+      "prerequisites": {
+        "gateway": true
+      },
+      "insert_file": "inserts/voice-v1.md",
+      "status_key": "voice"
     },
     {
       "id": "skills",
       "name": "Skills Display",
       "version": 1,
       "required": false,
-      "description": "View and manage agent skills from OpenPot. Reads skill list via gateway WebSocket, displays installed and bundled skills with status and requirements. Accessible within the Agents tab.",
+      "description": "View and manage agent skills from OpenPot. Reads skill list via gateway WebSocket, displays installed and bundled skills with status and requirements.",
       "prerequisites": {
         "gateway": true
       },
@@ -132,7 +112,7 @@
       "name": "SSH Terminal",
       "version": 1,
       "required": false,
-      "description": "In-app SSH terminal via SwiftTerm with ed25519 keypair authentication",
+      "description": "In-app SSH terminal via SwiftTerm with ed25519 keypair authentication.",
       "prerequisites": {
         "gateway": true
       },
@@ -144,29 +124,12 @@
       "name": "Settings",
       "version": 1,
       "required": false,
-      "description": "App settings accessible via the gear icon in the agent dock. Includes gateway configuration, connection management, appearance options, and voice output picker (ElevenLabs / System Voice / Off) with API key storage.",
+      "description": "Agent settings and configuration accessible from the agent dock gear icon.",
       "prerequisites": {
         "gateway": true
       },
       "insert_file": null,
       "status_key": "settings"
-    },
-    {
-      "id": "chat-backup-search",
-      "name": "Chat Backup & Search",
-      "version": 1,
-      "required": false,
-      "description": "Server-side chat storage with PostgreSQL — backs up device chat history and enables full-text search",
-      "prerequisites": {
-        "gateway": true,
-        "http_server": true,
-        "endpoints": [
-          "/api/chat/messages",
-          "/api/chat/sessions"
-        ]
-      },
-      "insert_file": "inserts/chat-backup-search-v1.md",
-      "status_key": "chat_backup_search"
     }
   ]
 }
