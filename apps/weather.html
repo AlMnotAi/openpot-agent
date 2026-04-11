@@ -149,7 +149,7 @@
   </div>
 
   <div class="search-bar">
-    <input type="text" id="zipInput" placeholder="Enter ZIP code" maxlength="5" inputmode="numeric" pattern="[0-9]*">
+    <input type="text" id="zipInput" placeholder="City name or ZIP code" maxlength="50">
     <button id="addBtn" onclick="addLocation()">Add</button>
   </div>
 
@@ -160,7 +160,7 @@
   <div class="empty" id="emptyState">
     <div class="icon">🌤️</div>
     <h2>No Locations</h2>
-    <p>Enter a ZIP code above to add a location. You can save up to 10.</p>
+    <p>Search by city name or postal code to add a location. You can save up to 10.</p>
   </div>
 </div>
 
@@ -221,20 +221,51 @@ function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(locations));
 }
 
-async function geocodeZip(zip) {
-  const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${zip}&count=5&language=en&format=json&country_code=US`);
-  const data = await res.json();
-  if (!data.results || data.results.length === 0) {
-    // Try as postal code via zip endpoint
-    const res2 = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${zip}&count=1&language=en&format=json`);
-    const data2 = await res2.json();
-    if (!data2.results || data2.results.length === 0) return null;
-    const r = data2.results[0];
-    return { lat: r.latitude, lon: r.longitude, name: r.name, region: r.admin1 || r.country || '' };
+async function geocodeLocation(query) {
+  const isNumeric = /^\d+$/.test(query);
+
+  if (isNumeric) {
+    // Numeric input — try postal code lookup via Zippopotam.us
+    // Try common countries: US, DE, FR, IT, ES, PL, CA, AU, GB doesn't use numeric-only
+    const countries = ['us', 'de', 'fr', 'it', 'es', 'pl', 'ca', 'au', 'br', 'mx'];
+    for (const cc of countries) {
+      try {
+        const res = await fetch(`https://api.zippopotam.us/${cc}/${query}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.places && data.places.length > 0) {
+            const place = data.places[0];
+            return {
+              lat: parseFloat(place.latitude),
+              lon: parseFloat(place.longitude),
+              name: place['place name'],
+              region: place['state abbreviation'] || place.state || data.country || ''
+            };
+          }
+        }
+      } catch(e) {}
+    }
+    // If no postal code match, fall through to name search
   }
-  // Find best match — prefer postcodes or cities
-  const r = data.results[0];
-  return { lat: r.latitude, lon: r.longitude, name: r.name, region: r.admin1 || r.country || '' };
+
+  // Text input or postal code fallback — use Open-Meteo geocoding
+  try {
+    const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=en&format=json`);
+    const data = await res.json();
+    if (data.results && data.results.length > 0) {
+      // Prefer results with higher population (more likely the intended city)
+      const sorted = data.results.sort((a, b) => (b.population || 0) - (a.population || 0));
+      const r = sorted[0];
+      return {
+        lat: r.latitude,
+        lon: r.longitude,
+        name: r.name,
+        region: r.admin1 || r.country || ''
+      };
+    }
+  } catch(e) {}
+
+  return null;
 }
 
 async function fetchWeather(lat, lon) {
@@ -245,10 +276,15 @@ async function fetchWeather(lat, lon) {
 
 async function addLocation() {
   const input = document.getElementById('zipInput');
-  const zip = input.value.trim();
-  if (!zip || zip.length < 5) { showStatus('Enter a 5-digit ZIP code', true); return; }
+  const query = input.value.trim();
+  if (!query || query.length < 2) { showStatus('Enter a city name or postal code', true); return; }
   if (locations.length >= MAX_LOCATIONS) { showStatus(`Maximum ${MAX_LOCATIONS} locations reached`, true); return; }
-  if (locations.find(l => l.zip === zip)) { showStatus('Location already added', true); return; }
+
+  // Check for duplicates by query string
+  const queryLower = query.toLowerCase();
+  if (locations.find(l => l.zip && l.zip.toLowerCase() === queryLower)) {
+    showStatus('Location already added', true); return;
+  }
 
   const btn = document.getElementById('addBtn');
   btn.disabled = true;
@@ -256,14 +292,19 @@ async function addLocation() {
   hideStatus();
 
   try {
-    const geo = await geocodeZip(zip);
-    if (!geo) { showStatus('ZIP code not found', true); btn.disabled = false; btn.textContent = 'Add'; return; }
+    const geo = await geocodeLocation(query);
+    if (!geo) { showStatus('Location not found', true); btn.disabled = false; btn.textContent = 'Add'; return; }
+
+    // Check for duplicate by coordinates (within ~10km)
+    if (locations.find(l => Math.abs(l.lat - geo.lat) < 0.1 && Math.abs(l.lon - geo.lon) < 0.1)) {
+      showStatus('A nearby location is already added', true); btn.disabled = false; btn.textContent = 'Add'; return;
+    }
 
     const weather = await fetchWeather(geo.lat, geo.lon);
 
     const loc = {
       id: Date.now().toString(),
-      zip: zip,
+      zip: query,
       name: geo.name,
       region: geo.region,
       lat: geo.lat,
