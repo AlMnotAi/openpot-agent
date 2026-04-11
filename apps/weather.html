@@ -222,39 +222,34 @@ function save() {
 }
 
 async function geocodeLocation(query) {
-  const isNumeric = /^\d+$/.test(query);
-
-  if (isNumeric) {
-    // Numeric input — try postal code lookup via Zippopotam.us
-    // Try common countries: US, DE, FR, IT, ES, PL, CA, AU, GB doesn't use numeric-only
-    const countries = ['us', 'de', 'fr', 'it', 'es', 'pl', 'ca', 'au', 'br', 'mx'];
-    for (const cc of countries) {
-      try {
-        const res = await fetch(`https://api.zippopotam.us/${cc}/${query}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data.places && data.places.length > 0) {
-            const place = data.places[0];
-            return {
-              lat: parseFloat(place.latitude),
-              lon: parseFloat(place.longitude),
-              name: place['place name'],
-              region: place['state abbreviation'] || place.state || data.country || ''
-            };
-          }
+  // 5-digit numeric = US ZIP code
+  if (/^\d{5}$/.test(query)) {
+    try {
+      const res = await fetch('https://api.zippopotam.us/us/' + query);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.places && data.places.length > 0) {
+          const p = data.places[0];
+          return {
+            lat: parseFloat(p.latitude),
+            lon: parseFloat(p.longitude),
+            name: p['place name'],
+            region: p['state abbreviation'] || p.state || ''
+          };
         }
-      } catch(e) {}
-    }
-    // If no postal code match, fall through to name search
+      }
+    } catch(e) {}
   }
 
-  // Text input or postal code fallback — use Open-Meteo geocoding
+  // Everything else: city names, non-US postal codes, failed ZIP
   try {
-    const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=en&format=json`);
+    const url = 'https://geocoding-api.open-meteo.com/v1/search?name='
+      + encodeURIComponent(query) + '&count=5&language=en&format=json';
+    const res = await fetch(url);
     const data = await res.json();
     if (data.results && data.results.length > 0) {
-      // Prefer results with higher population (more likely the intended city)
-      const sorted = data.results.sort((a, b) => (b.population || 0) - (a.population || 0));
+      const sorted = data.results.sort((a, b) =>
+        (b.population || 0) - (a.population || 0));
       const r = sorted[0];
       return {
         lat: r.latitude,
