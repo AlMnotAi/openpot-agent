@@ -1,9 +1,12 @@
 {
-  "manifest_version": 4,
+  "manifest_version": 5,
   "skill_id": "openpot-awareness",
   "skill_name": "OpenPot Awareness",
   "description": "Teaches your OpenClaw agent how to serve content to the OpenPot iOS client across all six tabs: Chat, Pulse, Calendar, Apps, Terminal, and Agents.",
   "repository": "https://github.com/AlMnotAi/openpot-agent",
+  "reference_files": [
+    "reference/openpot-platform-guide.md"
+  ],
   "features": [
     {
       "id": "chat",
@@ -18,9 +21,21 @@
       "status_key": "chat"
     },
     {
+      "id": "platform",
+      "name": "Platform Awareness",
+      "version": 2,
+      "required": true,
+      "description": "Compact platform stub injected into SOUL.md. Teaches the agent the three output surfaces (chat, cards, apps) and points to the full reference file for detailed specs.",
+      "prerequisites": {
+        "gateway": true
+      },
+      "insert_file": "inserts/platform-v2.md",
+      "status_key": "platform"
+    },
+    {
       "id": "pulse_cards",
       "name": "Pulse Cards",
-      "version": 1,
+      "version": 2,
       "required": false,
       "description": "Proactive notification cards delivered to the Pulse tab. Supports categories, priorities, expanded body with markdown, and action buttons.",
       "prerequisites": {
@@ -30,13 +45,14 @@
           "POST /api/cards"
         ]
       },
-      "insert_file": "inserts/pulse-cards-v1.md",
+      "insert_file": null,
+      "reference": "reference/openpot-platform-guide.md#1-pulse-cards",
       "status_key": "pulse_cards"
     },
     {
       "id": "pulse_expansion",
       "name": "Pulse Card Expansion",
-      "version": 1,
+      "version": 2,
       "required": false,
       "description": "Tap-to-expand on Pulse cards. Cards with expanded_body show a detail sheet with rendered markdown and optional action buttons.",
       "prerequisites": {
@@ -47,7 +63,8 @@
         ],
         "depends_on": ["pulse_cards"]
       },
-      "insert_file": "inserts/pulse-expansion-v1.md",
+      "insert_file": null,
+      "reference": "reference/openpot-platform-guide.md#2-expanded-cards",
       "status_key": "pulse_expansion"
     },
     {
@@ -69,7 +86,7 @@
     {
       "id": "apps",
       "name": "Web Apps",
-      "version": 2,
+      "version": 3,
       "required": false,
       "description": "Agent-generated web apps displayed in a categorized grid with bottom drawer navigation. Apps require a category field. Three creation types: self-contained HTML, HTML + backend service, Claude Code assisted.",
       "prerequisites": {
@@ -80,7 +97,8 @@
           "GET /api/apps/{filename}"
         ]
       },
-      "insert_file": "inserts/apps-v2.md",
+      "insert_file": null,
+      "reference": "reference/openpot-platform-guide.md#3-web-apps",
       "status_key": "apps"
     },
     {
