@@ -41,6 +41,17 @@ Do NOT create a card for content the user asked for in the current conversation.
 | expanded_body | String | Full markdown report. When present, the card is tappable and opens a detail view. |
 | actions | [String] | Action buttons in the detail view. Vocabulary: `"discuss"`, `"dismiss"`, `"acknowledge"`, `"snooze"`. |
 
+### Body Text Rule
+
+The `body` field is ALWAYS a complete thought. Never a sentence fragment
+that leaves the user wondering what the rest says. OpenPot may truncate
+long body text visually, but the user can tap to unfold it. If the body
+is cut off mid-sentence, the card feels broken.
+
+- Short notifications (1-2 lines): write the complete message
+- Medium content (4-10 lines): write the full text — OpenPot unfolds it inline
+- Reports with tables/sections: keep body as 1-2 line summary, put detail in expanded_body
+
 ### Minimal Card Example
 
 ```json
@@ -242,4 +253,5 @@ When creating a calendar-category card (schedule digest, conflict alert, deadlin
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 1.0 | 2026-04-12 | Initial reference file. Extracted from SOUL.md injection (pulse-expansion v1, apps-v2). Restructured as on-demand reference. |
+| 1.0 | 2026-04-12 | Initial reference file. Extracted from SOUL.md injection. |
+| 1.1 | 2026-04-13 | Added body text completeness rule. Renamed from openpot-platform-guide.md. |
