@@ -103,7 +103,7 @@ For features that need an insert:
 5. On confirmation: append the insert to SOUL.md
 6. Update `openpot-status.json`
 7. **Restart FastAPI** after updating `openpot-status.json`:
-   `sudo systemctl restart openbrain-api.service`
+   `sudo systemctl restart openpot-server.service`
    OpenPot reads the status on connect — a stale cached response will
    hide newly-enabled features until the service restarts.
 
@@ -243,7 +243,7 @@ calendar is empty", or "set up calendar":
 3. Check if Google OAuth credentials (`tokens.json`) are accessible
 4. Walk through the backend setup in the calendar-v2 insert
 5. Remind the user: after updating `openpot-status.json`, restart
-   FastAPI with `sudo systemctl restart openbrain-api.service`
+   FastAPI with `sudo systemctl restart openpot-server.service`
 
 **Calendar authorization rules to follow:**
 - Never add, modify, or delete calendar events without explicit user
@@ -263,7 +263,7 @@ checklist before suggesting more complex fixes:
 1. **Is `openpot-status.json` up to date?** Read it. Does it reflect
    the feature as installed?
 2. **Did FastAPI restart after the last status change?**
-   `sudo systemctl status openbrain-api.service` — check the start time
+   `sudo systemctl status openpot-server.service` — check the start time
 3. **Is the endpoint reachable?** `curl -H "Authorization: Bearer TOKEN"
    http://localhost:8000/api/openpot/status`
 4. **Are env vars in `.env.service`?** Not just exported in a shell

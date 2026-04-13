@@ -207,7 +207,7 @@ Look in the workspace root or the API server directory:
 ```bash
 ls ~/workspace/tokens.json
 ls ~/workspace/gcp-oauth.keys.json
-ls /opt/openbrain/tokens.json
+ls <server-install-path>/tokens.json
 ```
 
 If not present, ask the user:
@@ -302,14 +302,14 @@ credentials. Configure the service file to point to the right files:
 
 ```ini
 [Unit]
-Description=OpenBrain API
+Description=OpenPot Server
 After=network.target
 
 [Service]
 User=vmocadmin
-WorkingDirectory=/opt/openbrain
-EnvironmentFile=/opt/openbrain/.env.service
-ExecStart=/opt/openbrain/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000
+WorkingDirectory=<server-install-path>
+EnvironmentFile=<server-install-path>/.env.service
+ExecStart=<server-install-path>/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000
 Restart=always
 
 [Install]
@@ -320,20 +320,20 @@ WantedBy=multi-user.target
 persist across reboots if set with `export` in a shell session.
 
 ```bash
-# /opt/openbrain/.env.service
-OPENBRAIN_API_TOKEN=sk-openbrain-prod-2026-03-26
+# <server-install-path>/.env.service
+OPENPOT_SERVER_TOKEN=<your-server-token>
 POSTGRES_PASSWORD=your_postgres_password
 GOOGLE_CLIENT_ID=your_client_id_from_gcp_console
 GOOGLE_CLIENT_SECRET=your_client_secret_from_gcp_console
-GOOGLE_TOKEN_FILE=/opt/openbrain/tokens.json
+GOOGLE_TOKEN_FILE=<server-install-path>/tokens.json
 ```
 
 After modifying the service file or `.env.service`:
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl restart openbrain-api.service
-sudo systemctl status openbrain-api.service
+sudo systemctl restart openpot-server.service
+sudo systemctl status openpot-server.service
 ```
 
 ---
@@ -382,7 +382,7 @@ creating, updating, or deleting events requires a clear "yes" from the user.
 1. Check `GET /api/calendar/events?start=2026-04-01&end=2026-04-30` returns events
 2. Confirm `openpot-status.json` has `"calendar": {"installed": true}`
 3. Restart FastAPI after updating `openpot-status.json`:
-   `sudo systemctl restart openbrain-api.service`
+   `sudo systemctl restart openpot-server.service`
 4. In OpenPot, pull to refresh on the Calendar tab
 
 **Events decode silently — tab loads but shows no events:**
@@ -401,7 +401,7 @@ creating, updating, or deleting events requires a clear "yes" from the user.
   to source-based colors
 
 **"Not Authorized" or 401 on calendar endpoint:**
-- Bearer token in the request must match `OPENBRAIN_API_TOKEN` in
+- Bearer token in the request must match `OPENPOT_SERVER_TOKEN` in
   `.env.service`
 - Confirm env vars are in the file, not just exported in a shell session
 
@@ -424,7 +424,7 @@ creating, updating, or deleting events requires a clear "yes" from the user.
 | 3 | Missing OAuth credentials after deploy | 500 error from calendar endpoint | Add `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, token path to `.env.service` |
 | 4 | Env vars lost on service restart | 500 after reboot, works in shell | Move all vars from `export` shell commands into `.env.service` |
 | 5 | Only querying primary calendar | Missing work/family/hobby calendars | Iterate `calendarList().list()` to get all calendar IDs |
-| 6 | `openpot-status.json` stale after setup | Calendar tab still shows empty | Update status file AND restart FastAPI (`systemctl restart openbrain-api`) |
+| 6 | `openpot-status.json` stale after setup | Calendar tab still shows empty | Update status file AND restart FastAPI (`systemctl restart openpot-server`) |
 | 7 | HTML in notes field | `<br>`, `<b>` tags visible in app | Strip HTML from `description` before returning: `re.sub(r'<[^>]+>', '', notes)` |
 | 8 | All-day event with time component | All-day events show wrong time | Use Google's `event["start"]["date"]` not `event["start"]["dateTime"]` for all-day |
 | 9 | Agent adds event without asking | User surprised by calendar changes | Always ask: "Would you like me to add this to your calendar?" |

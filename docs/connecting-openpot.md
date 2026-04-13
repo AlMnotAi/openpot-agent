@@ -118,7 +118,7 @@ If your agent doesn't have the awareness skill installed yet, or doesn't have an
 **Important:** After updating `openpot-status.json`, restart your FastAPI service so OpenPot receives the new status on next connect:
 
 ```bash
-sudo systemctl restart openbrain-api.service
+sudo systemctl restart openpot-server.service
 ```
 
 ---
@@ -163,8 +163,8 @@ The Calendar tab requires your HTTP server to implement `GET /api/calendar/event
 **Connected but Pulse tab shows "No Pulse Server":**
 - Your agent needs an HTTP server on port 8000 with card endpoints
 - Run `curl http://YOUR_SERVER_IP:8000/api/cards` to verify the endpoint exists
-- If the endpoint returns 500: check that env vars (OPENBRAIN_API_TOKEN, POSTGRES_PASSWORD) are in `/opt/openbrain/.env.service` — not just exported in a shell session. Variables set with `export` in a shell do not survive service restarts.
-- After fixing the env file: `sudo systemctl daemon-reload && sudo systemctl restart openbrain-api.service`
+- If the endpoint returns 500: check that env vars (OPENPOT_SERVER_TOKEN, POSTGRES_PASSWORD) are in `<server-install-path>/.env.service` — not just exported in a shell session. Variables set with `export` in a shell do not survive service restarts.
+- After fixing the env file: `sudo systemctl daemon-reload && sudo systemctl restart openpot-server.service`
 - Check `openpot-status.json` has `"pulse_cards": {"enabled": true}`
 - Restart FastAPI after any status file change
 

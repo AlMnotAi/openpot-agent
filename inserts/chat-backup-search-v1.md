@@ -4,7 +4,7 @@
 
 OpenPot stores chat messages locally on the device using SwiftData. Chat persistence adds server-side storage so messages survive device resets, sync across devices, and are searchable from your side.
 
-This is a standalone feature. It requires a PostgreSQL database and an HTTP server (FastAPI on port 8000). It does NOT require OpenBrain, pgvector, embeddings, or any memory infrastructure. If you already have a FastAPI server running for Pulse cards or calendar, add the chat persistence endpoints to the same server. If not, you can run a minimal FastAPI server just for this.
+This is a standalone feature. It requires a PostgreSQL database and an HTTP server (FastAPI on port 8000). It does NOT require OpenPot Server, pgvector, embeddings, or any memory infrastructure. If you already have a FastAPI server running for Pulse cards or calendar, add the chat persistence endpoints to the same server. If not, you can run a minimal FastAPI server just for this.
 
 ### What You Provide
 

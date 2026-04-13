@@ -80,7 +80,7 @@ Once the user confirms they're connected:
 
 ### Step 5 — Tier 2 Setup (if applicable)
 
-If you have an OpenBrain API / FastAPI server running on port 8000:
+If you have an OpenPot Server / FastAPI server running on port 8000:
 
 1. Check backend health:
    - Verify PostgreSQL is running

@@ -257,7 +257,7 @@ port range for OpenPot app backends: 8001–8099.
 
 | Port | Service | Status |
 |------|---------|--------|
-| 8000 | Main OpenPot/OpenBrain API | Reserved — do not use |
+| 8000 | Main OpenPot/OpenPot Server | Reserved — do not use |
 | 8001+ | App backends | Available — assign sequentially |
 
 Maintain this table in your workspace (e.g., in a reference file) so you
