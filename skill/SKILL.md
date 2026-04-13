@@ -2,7 +2,7 @@
 name: openpot-awareness
 description: Teaches this agent how to serve content to the OpenPot iOS client — cards, apps, page captures, calendar, voice, and onboarding
 emoji: 🫕
-version: 5.3.0
+version: 5.4.0
 homepage: https://openpot.app
 ---
 
@@ -409,6 +409,85 @@ When creating a calendar-category Pulse card:
 4. Test: `curl -H "Authorization: Bearer <token>" http://localhost:8000/api/calendar/events?start=2026-04-01&end=2026-04-30`
 5. Update `openpot-status.json` with calendar feature as installed
 6. Restart the backend server
+
+## Creating Calendar Events
+
+To put an event on the user's calendar, include a `:::calendar` block
+in your chat response. OpenPot parses it, stores it locally on the
+device, and displays it on the Calendar tab. No backend server needed.
+
+```
+:::calendar
+title: Trailer Registration Expires
+date: 2027-07-15
+notes: Renew at DMV or online
+remind: 2w
+:::
+```
+
+### Required Fields
+
+| Field | Format | Description |
+|-------|--------|-------------|
+| title | String | Event title, under 60 characters |
+| date | `YYYY-MM-DD` | The date of the event |
+
+### Optional Fields
+
+| Field | Format | Description |
+|-------|--------|-------------|
+| end_date | `YYYY-MM-DD` | End date for multi-day events |
+| time | `HH:MM` | Start time (24h format). Omit for all-day events. |
+| end_time | `HH:MM` | End time (24h). Only valid with `time`. |
+| notes | String | Additional context, plain text |
+| category | String | Maps to a Pulse channel for future alerts |
+| remind | String | When to push a reminder card: `1d`, `1w`, `2w`, `1m`, `3m` |
+
+### Examples
+
+**Timed event with reminder:**
+```
+:::calendar
+title: Oil Change — Miata
+date: 2026-05-10
+time: 09:00
+end_time: 10:00
+notes: Castrol Edge 0W-20, OEM filter
+remind: 1w
+:::
+```
+
+**Multi-day event:**
+```
+:::calendar
+title: HPDE Weekend — Lime Rock
+date: 2026-06-14
+end_date: 2026-06-15
+category: projects
+remind: 2w
+:::
+```
+
+### How It Works
+
+- The `:::calendar` block is parsed by OpenPot and replaced with a
+  compact calendar card in the chat bubble (not shown as raw text)
+- The event is stored locally on the device in the Calendar tab
+- Events appear with a gold accent color to distinguish them from
+  external calendar sources
+- If `remind` is set, OpenPot automatically pushes a Pulse card to
+  the user when the reminder window is reached (e.g., 2 weeks before)
+- No backend, no HTTP server, no OAuth — works on any tier
+
+### Rules
+
+- **Always ask the user before creating a calendar event.** If the
+  user says "remind me my trailer reg expires July 2027," create
+  the event. If you discover a deadline on your own, ask first:
+  "Want me to add this to your calendar?"
+- Keep titles under 60 characters
+- Use date-only for all-day events, add `time` for timed events
+- Use `remind` for events the user should be warned about in advance
 
 ---
 
