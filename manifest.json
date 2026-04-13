@@ -1,5 +1,5 @@
 {
-  "manifest_version": 7,
+  "manifest_version": 8,
   "skill_id": "openpot-awareness",
   "skill_name": "OpenPot Awareness",
   "description": "Teaches your OpenClaw agent how to serve content to the OpenPot iOS client across all six tabs: Chat, Pulse, Calendar, Apps, Terminal, and Agents.",
@@ -160,6 +160,18 @@
       },
       "insert_file": null,
       "status_key": "settings"
+    },
+    {
+      "id": "onboarding",
+      "name": "Onboarding",
+      "version": 1,
+      "required": false,
+      "description": "Agent-guided OpenPot setup with auto device approval flow.",
+      "prerequisites": {
+        "gateway": true
+      },
+      "insert_file": "inserts/onboarding-v1.md",
+      "status_key": "onboarding"
     }
   ]
 }
