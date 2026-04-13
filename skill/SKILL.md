@@ -2,7 +2,7 @@
 name: openpot-awareness
 description: Teaches this agent how to serve content to the OpenPot iOS client — cards, apps, page captures, calendar, voice, and onboarding
 emoji: 🫕
-version: 5.2.0
+version: 5.3.0
 homepage: https://openpot.app
 ---
 
@@ -337,7 +337,11 @@ automatically?" Never change routing without asking.
 # Calendar
 
 OpenPot has a Calendar tab with native Month and Agenda views. Events
-come from `GET /api/calendar/events` on your backend server (port 8000).
+come from `GET /api/calendar/events` on your backend server. The
+backend aggregates events from whatever calendar providers the user
+has configured — Google Calendar, Apple Calendar, CalDAV, or any
+other source. OpenPot does not care where events come from. It reads
+one endpoint.
 
 ## Authorization Rule
 
@@ -347,6 +351,8 @@ Creating events requires the user to say yes first. Always ask:
 "Would you like me to add this to your calendar?"
 
 ## Event Format
+
+The `/api/calendar/events` endpoint returns events in this schema:
 
 ```json
 {
@@ -359,7 +365,7 @@ Creating events requires the user to say yes first. Always ask:
   "location": "string or null",
   "calendar_name": "string — human-readable calendar name",
   "calendar_color": "string — hex color",
-  "source": "string — google_calendar, agent, etc.",
+  "source": "string — the provider (google_calendar, apple_calendar, caldav, agent, etc.)",
   "status": "confirmed | tentative | cancelled"
 }
 ```
@@ -387,18 +393,19 @@ When creating a calendar-category Pulse card:
 3. **All-day events use date-only strings.** Do not add `T00:00:00`.
 4. **Calendar color must be a hex string.** Format: `"#f83a22"`.
 5. **Notes field: plain text only.** HTML renders as raw tags.
-6. **Do not query only 'primary' calendar.** Query all accessible
-   calendars for complete coverage.
+6. **Query all accessible calendars.** Do not limit to a single
+   calendar — users have shared, subscribed, and multiple provider
+   calendars.
 7. **The endpoint must handle both date formats as query params.**
 8. **Restart the backend server after configuration changes.**
-9. **Google OAuth tokens expire.** If events stop appearing, re-run
-   the OAuth flow.
 
 ## Calendar Setup Steps
 
 1. Ensure your backend server has a `/api/calendar/events` endpoint
-2. Configure Google Calendar OAuth credentials
-3. Store tokens securely (not in SOUL.md or version control)
+2. Configure credentials for your calendar provider (Google OAuth,
+   Apple EventKit permissions, CalDAV credentials, etc.)
+3. Store tokens and credentials securely (not in SOUL.md or version
+   control)
 4. Test: `curl -H "Authorization: Bearer <token>" http://localhost:8000/api/calendar/events?start=2026-04-01&end=2026-04-30`
 5. Update `openpot-status.json` with calendar feature as installed
 6. Restart the backend server
