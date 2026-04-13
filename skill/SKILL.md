@@ -2,7 +2,7 @@
 name: openpot-awareness
 description: Teaches this agent how to serve content to the OpenPot iOS client — cards, apps, page captures, calendar, voice, and onboarding
 emoji: 🫕
-version: 5.4.0
+version: 5.5.0
 homepage: https://openpot.app
 ---
 
@@ -412,9 +412,50 @@ When creating a calendar-category Pulse card:
 
 ## Creating Calendar Events
 
-To put an event on the user's calendar, include a `:::calendar` block
+The user may have calendars connected from external providers (Google
+Calendar, Apple Calendar, CalDAV), and each provider may have multiple
+sub-calendars (personal, work, family, hobbies, sports, etc.). If no
+external calendars are connected yet, you can help set that up — see
+the Calendar Setup Steps above.
+
+Regardless of what external calendars are connected, you always have
+your agent calendar. It is yours, stored locally on the OpenPot device,
+and requires no backend or provider setup.
+
+### Which Calendar? Always Clarify.
+
+When the user asks you to add an event, you need to know which
+calendar it belongs on. If the user doesn't specify, ask:
+
+**"Which calendar should I put this on — your [list their known
+calendars], or my agent calendar?"**
+
+Learn the user's calendars early. When you first access their calendar
+data, note which calendars exist and what they're used for. Over time
+you'll know "work stuff goes on Al Work" and "track days go on SCDA"
+without asking.
+
+**Routing rules:**
+- User says "my calendar" or names a specific calendar (e.g., "put it
+  on my work calendar") → use the appropriate provider calendar API
+- User says "agent calendar," "your calendar," or "track this for me"
+  → use the `:::calendar` block (agent calendar)
+- User says "remind me" or "don't forget" about a future date → use
+  the `:::calendar` block with a `remind` interval
+- User asks you to add to a specific provider calendar → use that
+  provider's API (Google Calendar API, etc.)
+- When in doubt → ask. Never guess.
+
+**You have full access to provider calendars.** You can read, create,
+edit, and delete events on the user's connected calendars (Google,
+Apple, CalDAV, etc.) using their respective APIs. The agent calendar
+is an additional calendar, not a replacement.
+
+### Agent Calendar — The `:::calendar` Block
+
+To put an event on YOUR agent calendar, include a `:::calendar` block
 in your chat response. OpenPot parses it, stores it locally on the
-device, and displays it on the Calendar tab. No backend server needed.
+device, and displays it on the Calendar tab with a gold accent color.
 
 ```
 :::calendar
@@ -424,6 +465,8 @@ notes: Renew at DMV or online
 remind: 2w
 :::
 ```
+
+This works on any tier — no backend server needed.
 
 ### Required Fields
 
@@ -474,20 +517,25 @@ remind: 2w
   compact calendar card in the chat bubble (not shown as raw text)
 - The event is stored locally on the device in the Calendar tab
 - Events appear with a gold accent color to distinguish them from
-  external calendar sources
+  provider calendar sources
 - If `remind` is set, OpenPot automatically pushes a Pulse card to
   the user when the reminder window is reached (e.g., 2 weeks before)
 - No backend, no HTTP server, no OAuth — works on any tier
 
 ### Rules
 
-- **Always ask the user before creating a calendar event.** If the
-  user says "remind me my trailer reg expires July 2027," create
-  the event. If you discover a deadline on your own, ask first:
-  "Want me to add this to your calendar?"
+- **Always confirm which calendar before creating an event.** If the
+  user says "put it on my work calendar," use the provider API. If
+  they say "track this" or "agent calendar," use the `:::calendar`
+  block. If unclear, ask.
+- **Never silently create events on any calendar.** Always confirm
+  with the user first. If you discover a deadline on your own, ask:
+  "Want me to add this to your calendar? Which one?"
 - Keep titles under 60 characters
 - Use date-only for all-day events, add `time` for timed events
 - Use `remind` for events the user should be warned about in advance
+- Learn the user's calendar layout early — know which calendars exist
+  and what they're used for so you can suggest the right one
 
 ---
 
