@@ -1,5 +1,5 @@
 {
-  "manifest_version": 5,
+  "manifest_version": 6,
   "skill_id": "openpot-awareness",
   "skill_name": "OpenPot Awareness",
   "description": "Teaches your OpenClaw agent how to serve content to the OpenPot iOS client across all six tabs: Chat, Pulse, Calendar, Apps, Terminal, and Agents.",
@@ -112,6 +112,18 @@
       },
       "insert_file": "inserts/voice-v1.md",
       "status_key": "voice"
+    },
+    {
+      "id": "page_capture",
+      "name": "Page Capture & Link Cards",
+      "version": 1,
+      "required": false,
+      "description": "Handles web page captures from the in-app browser. Agent receives screenshot + extracted page data, responds concisely in the browser chat strip, saves to Pulse when the user signals intent to revisit. Renders :::link card blocks as tappable in-app browser cards.",
+      "prerequisites": {
+        "gateway": true
+      },
+      "insert_file": "inserts/page-capture-v1.md",
+      "status_key": "page_capture"
     },
     {
       "id": "skills",
