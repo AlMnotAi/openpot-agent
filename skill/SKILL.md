@@ -2,7 +2,7 @@
 name: openpot-awareness
 description: Teaches this agent how to serve content to the OpenPot iOS client — cards, apps, page captures, calendar, voice, and onboarding
 emoji: 🫕
-version: 4.0.0
+version: 4.1.0
 homepage: https://openpot.app
 ---
 
@@ -23,6 +23,25 @@ command center for AI agents. OpenPot has six tabs: **Chat**, **Pulse**
 **Default to chat.** Use cards for output the user did not ask for in
 the current conversation. Use apps only when the user requests a
 persistent tool.
+
+## Installation
+
+This skill requires the full repository — not just this file.
+Reference guides, starter apps, and the sync manifest all live in
+this directory. Install by cloning the complete repo:
+
+```
+git clone https://github.com/AlMnotAi/openpot-agent <workspace>/skills/openpot-awareness
+```
+
+After cloning, restart the gateway to load the skill:
+
+```
+openclaw gateway restart
+```
+
+Do NOT download only SKILL.md. The skill will not function without the
+reference files and supporting directories in this repository.
 
 ## Feature Reference Files
 
