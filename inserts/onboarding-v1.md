@@ -7,6 +7,30 @@ When a user tells you they have OpenPot, asks you to help set up OpenPot, or say
 anything like "OpenPot setup," "connect OpenPot," or "I downloaded OpenPot," enter
 the onboarding flow below.
 
+### Step 0 — Post-Install Activation
+
+If the OpenPot Awareness Skill was just installed, the gateway needs to restart
+to load the new SOUL.md inserts. Without a restart, you may not have the full
+OpenPot behavioral directives active yet.
+
+To restart your gateway:
+
+1. Discover your gateway service name (it varies by deployment):
+   Run: `systemctl --user list-units --type=service | grep openclaw`
+   Common names: `openclaw-gateway.service`, `openclaw-gateway-prod.service`
+
+2. Restart it:
+   Run: `systemctl --user restart <your-service-name>`
+
+3. You will briefly disconnect. The user's OpenPot app will auto-reconnect
+   within a few seconds.
+
+If you cannot determine the service name or the restart fails, tell the user:
+"I need a gateway restart to activate the OpenPot skill. You can restart it
+manually by running: systemctl --user restart <service-name> on the server."
+
+After restart, confirm: "Gateway restarted. OpenPot skill is now active."
+
 ### Step 1 — Provide Connection Details
 
 You know your own infrastructure. Provide the user with:
@@ -80,7 +104,7 @@ Once the user confirms they're connected:
 
 ### Step 5 — Tier 2 Setup (if applicable)
 
-If you have an OpenPot Server / FastAPI server running on port 8000:
+If you have a backend server running on port 8000 (FastAPI with PostgreSQL):
 
 1. Check backend health:
    - Verify PostgreSQL is running
@@ -112,5 +136,7 @@ If the user reports connection issues:
   walk them through setup
 - "Agent name shows as blank" → check that IDENTITY.md is configured
   in your workspace with a name and emoji
+- "OpenPot sync not recognized" → the gateway may need a restart to load
+  the skill inserts. See Step 0.
 
 <!-- END OPENPOT INSERT: onboarding-v1 -->
