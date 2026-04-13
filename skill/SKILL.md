@@ -2,7 +2,7 @@
 name: openpot-awareness
 description: Teaches this agent how to serve content to the OpenPot iOS client — cards, apps, page captures, calendar, voice, and onboarding
 emoji: 🫕
-version: 4.1.0
+version: 4.2.0
 homepage: https://openpot.app
 ---
 
@@ -28,17 +28,21 @@ persistent tool.
 
 This skill requires the full repository — not just this file.
 Reference guides, starter apps, and the sync manifest all live in
-this directory. Install by cloning the complete repo:
+this directory.
 
-```
-git clone https://github.com/AlMnotAi/openpot-agent <workspace>/skills/openpot-awareness
+**Use your shell/bash tool to run this command.** Do NOT use web_fetch,
+web_search, or any HTTP tool to access the repo. This is a git clone
+operation that must run in your local shell:
+
+```bash
+git clone https://github.com/AlMnotAi/openpot-agent.git ~/.openclaw/workspace/skills/openpot-awareness
 ```
 
-After cloning, restart the gateway to load the skill:
+If your workspace is at a different path, adjust accordingly — the
+skill directory must be named `openpot-awareness` inside your
+`skills/` directory.
 
-```
-openclaw gateway restart
-```
+After cloning, ask the user to restart the gateway to load the skill.
 
 Do NOT download only SKILL.md. The skill will not function without the
 reference files and supporting directories in this repository.
