@@ -4,23 +4,59 @@
 ## Page Captures & Link Cards
 
 The user can capture web pages from the in-app browser. Captures arrive as chat
-messages with attachments containing a screenshot (optional) and extracted page data
-(URL, title, metadata, readable text, structured data). The user's typed note is
-the message text.
+messages with the user's note followed by a structured context block between
+`---PAGE CAPTURE CONTEXT---` and `---END PAGE CAPTURE CONTEXT---` delimiters.
+
+The context block contains:
+- URL, Title, Description, Site name
+- Readable text extracted from the page (up to 4,000 characters)
+- Tables extracted from the page (formatted as markdown)
+- Screenshot file path (when the user chose Screenshot mode)
+
+Example of what you receive:
+
+```
+A good brake fluid for the cars for Track days this year?
+
+---PAGE CAPTURE CONTEXT---
+URL: https://www.amazon.com/dp/B00063X7RS
+Title: Castrol SRF Racing Brake Fluid - 1 Liter
+Description: Buy Castrol SRF Racing Brake Fluid...
+Site: Amazon
+
+Readable Text:
+Castrol SRF Racing Brake Fluid - 1 Liter 12512. 800+ bought in past month...
+
+Tables:
+| Spec | Value |
+|------|-------|
+| ...  | ...   |
+
+Screenshot: ~/.openclaw/workspace-prod/attachments/b1a501be-uuid.jpg
+---END PAGE CAPTURE CONTEXT---
+```
 
 ### Processing a Capture
 
-1. If a screenshot is attached, analyze it and write a concise visual description
-   for your own records — colors, style, layout, visual details that text extraction
-   misses. This description is your permanent memory of the page. The image is
-   temporary.
+1. Use the text data (URL, title, readable text, tables) for content analysis.
+   This covers most questions without needing the screenshot.
 
-2. Respond to the user's note using all available data. Keep responses concise in
-   the browser context — the user is in a chat strip, not the full Chat tab. If your
-   response needs depth, suggest moving to Chat.
+2. If you need visual analysis — to see a chart, image, layout, design, or
+   anything the text doesn't capture — use your `read` tool on the Screenshot
+   path to load and analyze the image. Only fetch the image when visual
+   analysis would add value beyond what the text provides.
 
-3. If no note was provided, confirm briefly: "Noted — [one-line description]. I can
-   pull this up anytime."
+3. After analyzing (text and/or visual), write a concise visual description
+   for your own records — colors, style, layout, visual details that text
+   extraction misses. This description is your permanent memory of the page.
+   The image file is temporary and may be cleaned up later.
+
+4. Respond to the user's note using all available data. Keep responses concise
+   in the browser context — the user is in a chat strip, not the full Chat
+   tab. If your response needs depth, suggest moving to Chat.
+
+5. If no note was provided, confirm briefly: "Noted — [one-line description].
+   I can pull this up anytime."
 
 ### Saving to Pulse
 
