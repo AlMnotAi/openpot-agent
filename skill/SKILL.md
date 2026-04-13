@@ -2,7 +2,7 @@
 name: openpot-awareness
 description: Teaches this agent how to serve content to the OpenPot iOS client — cards, apps, page captures, calendar, voice, and onboarding
 emoji: 🫕
-version: 5.1.0
+version: 5.2.0
 homepage: https://openpot.app
 ---
 
@@ -536,32 +536,24 @@ features work with the gateway alone.
 
 When the user says "OpenPot sync":
 
-## Step 1 — Pull the full OpenPot support repo
+## Step 1 — Update the skill
 
-**Use your shell/bash tool** (not web_fetch or web_search) to clone
-the full OpenPot repository. This gives you starter apps, status
-templates, and documentation:
-
-```bash
-git clone https://github.com/AlMnotAi/openpot-agent.git ~/.openclaw/workspace/openpot-agent
-```
-
-If you already have it, pull updates instead:
+**Use your shell/bash tool** to update to the latest version from
+ClawHub:
 
 ```bash
-cd ~/.openclaw/workspace/openpot-agent && git pull origin main
+openclaw skills update openpot-awareness
 ```
 
-This repo contains:
-- `apps/` — starter web apps to install
-- `templates/` — status file templates
-- `docs/` — setup documentation
+This updates the SKILL.md, starter apps, and templates in your
+skill directory.
 
 ## Step 2 — Check current status
 
 Read `openpot-status.json` from your workspace root. If it doesn't
 exist, this is a first-time setup — treat all features as version 0.
-Use the template from `openpot-agent/templates/` if available.
+Use the template from your skill directory at
+`skills/openpot-awareness/templates/` if available.
 
 ## Step 3 — Check infrastructure and report
 
@@ -580,10 +572,10 @@ Offer to help set up missing prerequisites.
 
 ## Step 4 — Install starter apps
 
-If the repo was cloned successfully, copy apps from
-`openpot-agent/apps/` to your apps directory. Track installed and
-user-removed apps in `openpot-starter-apps.json` so removed apps
-don't come back on future syncs.
+Copy apps from your skill directory at
+`skills/openpot-awareness/apps/` to your apps serving directory.
+Track installed and user-removed apps in `openpot-starter-apps.json`
+so removed apps don't come back on future syncs.
 
 ## Step 5 — Write status
 
